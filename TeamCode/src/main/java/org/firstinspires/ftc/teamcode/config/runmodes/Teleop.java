@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.config.runmodes;
 
 import org.firstinspires.ftc.teamcode.config.subsystem.ServoSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.LiftScoreSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Teleop {
 
     private ServoSubsystem servoSubsystem;
+    private LiftScoreSubsystem liftScoreSubsystem;
     private VisionSubsystem visionSubsystem;
 
     private Follower follower;
@@ -63,6 +65,7 @@ public class Teleop {
 
     public Teleop(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, Pose startPose,  boolean fieldCentric, Gamepad gamepad1, Gamepad gamepad2) {
         servoSubsystem = new ServoSubsystem(hardwareMap);
+        liftScoreSubsystem = new LiftScoreSubsystem(hardwareMap);
         visionSubsystem = new VisionSubsystem(hardwareMap, leftFront, rightFront, leftRear, rightRear, telemetry);
 
         this.follower = follower;
@@ -73,7 +76,7 @@ public class Teleop {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        /*leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -81,11 +84,12 @@ public class Teleop {
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
     }
 
     public void init() {
         servoSubsystem.init();
+        liftScoreSubsystem.init();
     }
 
     public void update() {
@@ -100,6 +104,10 @@ public class Teleop {
             speed = 0.25;
         else
             speed = 0.75;
+
+
+        double liftPow = (gamepad2.right_trigger - gamepad2.left_trigger);
+
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
 
@@ -152,6 +160,7 @@ public class Teleop {
 
     public void start() {
         servoSubsystem.start();
+        liftScoreSubsystem.start();
         follower.setPose(startPose);
         follower.startTeleopDrive();
     }

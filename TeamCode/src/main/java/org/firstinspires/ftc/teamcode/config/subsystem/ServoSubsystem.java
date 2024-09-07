@@ -8,22 +8,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoSubsystem {
 
-    private Servo s;
+    private Servo claw;
 
     public ServoSubsystem(HardwareMap hardwareMap) {
-        s = hardwareMap.get(Servo.class, "s");
+        claw = hardwareMap.get(Servo.class, "claw");
     }
 
-    public void sPos(double pos) {
-        s.setPosition(pos);
+    public void clawPos(double clawPos) {
+        claw.setPosition(clawPos);
     }
 
     public void init() {
-        s.setPosition(sInit);
+        claw.setPosition(sInit);
     }
 
     public void start() {
-        s.setPosition(sStart);
+        claw.setPosition(sStart);
     }
 
 }
