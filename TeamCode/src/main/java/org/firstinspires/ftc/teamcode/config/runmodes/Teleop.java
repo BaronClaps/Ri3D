@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.config.runmodes;
 
-import org.firstinspires.ftc.teamcode.config.subsystem.ServoSubsystem;
-import org.firstinspires.ftc.teamcode.config.subsystem.LiftScoreSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,9 +14,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Teleop {
 
-    private ServoSubsystem servoSubsystem;
-    private LiftScoreSubsystem liftScoreSubsystem;
-    private VisionSubsystem visionSubsystem;
+    private ClawSubsystem clawSubsystem;
+    private LiftSubsystem liftSubsystem;
+    //private VisionSubsystem visionSubsystem;
 
     private Follower follower;
     private Pose startPose;
@@ -64,9 +63,9 @@ public class Teleop {
 
 
     public Teleop(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, Pose startPose,  boolean fieldCentric, Gamepad gamepad1, Gamepad gamepad2) {
-        servoSubsystem = new ServoSubsystem(hardwareMap);
-        liftScoreSubsystem = new LiftScoreSubsystem(hardwareMap);
-        visionSubsystem = new VisionSubsystem(hardwareMap, leftFront, rightFront, leftRear, rightRear, telemetry);
+        clawSubsystem = new ClawSubsystem(hardwareMap);
+        liftSubsystem = new LiftSubsystem(hardwareMap);
+        //visionSubsystem = new VisionSubsystem(hardwareMap, leftFront, rightFront, leftRear, rightRear, telemetry);
 
         this.follower = follower;
         this.startPose = startPose;
@@ -88,8 +87,8 @@ public class Teleop {
     }
 
     public void init() {
-        servoSubsystem.init();
-        liftScoreSubsystem.init();
+        //clawSubsystem.init();
+        liftSubsystem.init();
     }
 
     public void update() {
@@ -106,12 +105,9 @@ public class Teleop {
             speed = 0.75;
 
 
-        double liftPow = (gamepad2.right_trigger - gamepad2.left_trigger);
-
-
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
 
-        if (follower.getPose().getY() >= 5)
+        /*if (follower.getPose().getY() >= 5)
             gamepad1.setLedColor(1,0,0,Gamepad.LED_DURATION_CONTINUOUS);
 
         if (follower.getPose().getY() <= -5)
@@ -142,7 +138,19 @@ public class Teleop {
             toggleRumble = !toggleRumble;
 
         if (toggleRumble)
-            gamepad1.runRumbleEffect(RLB);
+            gamepad1.runRumbleEffect(RLB);*/
+
+        if (gamepad1.left_trigger > .5)
+            liftSubsystem.manualLift(200, true);
+
+        if (gamepad1.right_trigger > .5)
+            liftSubsystem.manualLift(200, false);
+
+        if(gamepad1.left_bumper)
+            clawSubsystem.init();
+
+        if(gamepad1.right_bumper)
+            clawSubsystem.start();
 
         follower.update();
 
@@ -150,17 +158,14 @@ public class Teleop {
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading", Math.toDegrees(follower.getPose().getHeading()));
 
-        telemetry.addData("l.x", -gamepad1.left_stick_x);
-        telemetry.addData("l.y", -gamepad1.left_stick_y);
-        telemetry.addData("r.x", -gamepad1.right_stick_x);
-
-        telemetry.addData("driveVector", follower.driveVector);
+        telemetry.addData("Estimated Lift Pos", liftSubsystem.getLiftPos());
+        telemetry.addData("Actual Lift Pos", liftSubsystem.lift.getCurrentPosition());
         telemetry.update();
     }
 
     public void start() {
-        servoSubsystem.start();
-        liftScoreSubsystem.start();
+        clawSubsystem.start();
+        liftSubsystem.start();
         follower.setPose(startPose);
         follower.startTeleopDrive();
     }

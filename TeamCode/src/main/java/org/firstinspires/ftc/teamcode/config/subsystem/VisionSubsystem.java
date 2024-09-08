@@ -21,7 +21,7 @@ public class VisionSubsystem {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
-    private ServoSubsystem servoSubsystem;
+    private ClawSubsystem clawSubsystem;
     private boolean targetFound = false;
     private AprilTagDetection desiredTag = null;
     private AprilTagPoseFtc tagPose;
@@ -38,7 +38,7 @@ public class VisionSubsystem {
 
 
     public VisionSubsystem(HardwareMap hardwareMap, DcMotor leftFrontDrive, DcMotor rightFrontDrive, DcMotor leftBackDrive, DcMotor rightBackDrive, Telemetry telemetry) {
-        servoSubsystem = new ServoSubsystem(hardwareMap);
+        clawSubsystem = new ClawSubsystem(hardwareMap);
         this.leftFrontDrive = leftFrontDrive;
         this.rightFrontDrive = rightFrontDrive;
         this.leftBackDrive = leftBackDrive;
@@ -48,7 +48,7 @@ public class VisionSubsystem {
     }
 
     public VisionSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        servoSubsystem = new ServoSubsystem(hardwareMap);
+        clawSubsystem = new ClawSubsystem(hardwareMap);
         this.telemetry = telemetry;
         webcam1 = hardwareMap.get(WebcamName.class, "webcam1");
     }
@@ -76,7 +76,7 @@ public class VisionSubsystem {
 
     public void aprilUpdate() {
         servoAlignToTag(-1);
-        servoSubsystem.sPos(targetPosition);
+        clawSubsystem.clawPos(targetPosition);
         telemetryAprilTag();
     }
 

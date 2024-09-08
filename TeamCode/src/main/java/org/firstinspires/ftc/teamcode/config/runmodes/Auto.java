@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.config.subsystem.ServoSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
@@ -17,53 +17,48 @@ import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.PathBuilder;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.config.util.action.ActionStorage;
-import org.firstinspires.ftc.teamcode.config.vision.Navigation;
 
 public class Auto {
 
-    public Navigation nav;
     private RobotStart startLocation;
 
     public VisionSubsystem vision;
-    public ServoSubsystem servo;
+    public ClawSubsystem servo;
     public Follower follower;
 
     public ActionStorage actionStorage;
 
     private boolean isBlue;
-    private boolean isClose;
+    private boolean isBucket;
 
     public Path purple;
     public PathChain yellow, park;
     private Pose startPose, purplePose, yellowPose, parkPose;
 
-    public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isClose) {
+    public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
 
-        servo = new ServoSubsystem(hardwareMap);
+        servo = new ClawSubsystem(hardwareMap);
         vision = new VisionSubsystem(hardwareMap, telemetry);
 
         this.follower = follower;
 
-
         this.isBlue = isBlue;
-        this.isClose = isClose;
+        this.isBucket = isBucket;
 
-        startLocation = isBlue ? (isClose ? RobotStart.BLUE_CLOSE : RobotStart.BLUE_FAR) : (isClose ? RobotStart.RED_CLOSE : RobotStart.RED_FAR);
+        startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
 
     }
 
     public void init() {
-        nav = Navigation.LEFT;
+        createPoses();
+        buildPaths();
     }
 
     public void init_loop() {
-        vision.navUpdate(nav);
+
     }
 
     public void start() {
-        vision.navUpdate(nav);
-        createPoses();
-        buildPaths();
 
     }
 
@@ -73,72 +68,24 @@ public class Auto {
 
     public void createPoses() {
         switch (startLocation) {
-            case BLUE_CLOSE:
-                startPose = blueCloseStart;
-                parkPose = blueClosePark;
-
-                switch(nav) {
-                    case LEFT:
-                        purplePose = blueCloseLeftPurple;
-                        yellowPose = blueLeftYellow;
-                    case CENTER:
-                        purplePose = blueCloseCenterPurple;
-                        yellowPose = blueCenterYellow;
-                    case RIGHT:
-                        purplePose = blueCloseRightPurple;
-                        yellowPose = blueRightYellow;
-                }
+            case BLUE_BUCKET:
+                startPose = blueBucketStart;
+                parkPose = blueBucketPark;
                 break;
 
-            case BLUE_FAR:
-                startPose = blueFarStart;
-                parkPose = blueFarPark;
-
-                switch(nav) {
-                    case LEFT:
-                        purplePose = blueFarLeftPurple;
-                        yellowPose = blueLeftYellow;
-                    case CENTER:
-                        purplePose = blueFarCenterPurple;
-                        yellowPose = blueCenterYellow;
-                    case RIGHT:
-                        purplePose = blueFarRightPurple;
-                        yellowPose = blueRightYellow;
-                }
+            case BLUE_OBSERVATION:
+                startPose = blueObservationStart;
+                parkPose = blueObservationPark;
                 break;
 
-            case RED_CLOSE:
-                startPose = redCloseStart;
-                parkPose = redClosePark;
-
-                switch(nav) {
-                    case LEFT:
-                        purplePose = redCloseLeftPurple;
-                        yellowPose = redLeftYellow;
-                    case CENTER:
-                        purplePose = redCloseCenterPurple;
-                        yellowPose = redCenterYellow;
-                    case RIGHT:
-                        purplePose = redCloseRightPurple;
-                        yellowPose = redRightYellow;
-                }
+            case RED_BUCKET:
+                startPose = redBucketStart;
+                parkPose = redBucketPark;
                 break;
 
-            case RED_FAR:
-                startPose = redFarStart;
-                parkPose = redFarPark;
-
-                switch(nav) {
-                    case LEFT:
-                        purplePose = redFarLeftPurple;
-                        yellowPose = redLeftYellow;
-                    case CENTER:
-                        purplePose = redFarCenterPurple;
-                        yellowPose = redCenterYellow;
-                    case RIGHT:
-                        purplePose = redFarRightPurple;
-                        yellowPose = redRightYellow;
-                }
+            case RED_OBSERVATION:
+                startPose = redObservationStart;
+                parkPose = redObservationPark;
                 break;
         }
 
@@ -150,7 +97,7 @@ public class Auto {
         purple = new Path(new BezierLine(new Point(startPose), new Point(purplePose)));
         purple.setLinearHeadingInterpolation(startPose.getHeading(), purplePose.getHeading());
 
-        if (!isClose) {
+        if (!isBucket) {
             yellow = new PathBuilder()
                     .addPath(new Path(new BezierLine(new Point(purplePose), new Point(yellowPose))))
                     .setConstantHeadingInterpolation(yellowPose.getHeading())

@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 
-public class ServoSubsystem {
+public class ClawSubsystem {
 
     private Servo claw;
 
-    public ServoSubsystem(HardwareMap hardwareMap) {
+    public ClawSubsystem(HardwareMap hardwareMap) {
         claw = hardwareMap.get(Servo.class, "claw");
     }
 
@@ -19,11 +19,11 @@ public class ServoSubsystem {
     }
 
     public void init() {
-        claw.setPosition(sInit);
+        claw.setPosition(1);
     }
 
     public void start() {
-        claw.setPosition(sStart);
+        claw.setPosition(0.5);
     }
 
 }
