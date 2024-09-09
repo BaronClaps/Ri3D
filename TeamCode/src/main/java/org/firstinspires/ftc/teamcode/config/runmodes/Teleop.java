@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config.runmodes;
 
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
@@ -18,6 +19,7 @@ public class Teleop {
     private ClawSubsystem.ClawState clawState;
     private LiftSubsystem lift;
     private ExtendSubsystem extend;
+    private IntakeSubsystem intake;
 
 
     private Follower follower;
@@ -40,6 +42,7 @@ public class Teleop {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap);
         extend = new ExtendSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap);
 
         this.follower = follower;
         this.startPose = startPose;
@@ -54,6 +57,7 @@ public class Teleop {
         claw.init();
         lift.init();
         extend.init();
+        intake.init();
     }
 
     public void update() {
@@ -70,19 +74,34 @@ public class Teleop {
             speed = 0.75;
 
         if (gamepad2.left_trigger > .5)
-            lift.manualLift(50, true);
+            lift.manualLift(200, true);
 
         if (gamepad2.right_trigger > .5)
-            lift.manualLift(50, false);
+            lift.manualLift(200, false);
 
         if (gamepad2.left_bumper)
-            extend.manualExtend(50, true);
+            extend.manualExtend(200, true);
 
         if (gamepad2.right_bumper)
-            extend.manualExtend(50, false);
+            extend.manualExtend(200, false);
+
+        if (gamepad2.y) {
+            lift.presetLift(3100);
+        }
 
         if (currentGamepad2.a && !previousGamepad2.a)
             claw.switchClawState();
+
+        if(gamepad2.dpad_up)
+            intake.intakeSpinOut();
+
+        if(gamepad2.dpad_down)
+            intake.intakeSpinIn();
+
+        if(gamepad2.dpad_left)
+            intake.intakeSpinStop();
+
+        intake.intakeSpinOut();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
         follower.update();
@@ -103,6 +122,7 @@ public class Teleop {
         claw.start();
         lift.start();
         extend.start();
+        intake.start();
         follower.setPose(startPose);
         follower.startTeleopDrive();
     }

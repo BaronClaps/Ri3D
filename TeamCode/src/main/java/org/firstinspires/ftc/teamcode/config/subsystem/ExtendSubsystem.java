@@ -16,7 +16,7 @@ public class ExtendSubsystem {
         if (!negative) {
             extend.setPower(1);
             extend.setTargetPosition(extend.getCurrentPosition() + extendPos);
-            if (extend.getCurrentPosition() > extend.getTargetPosition()) {
+            if (extend.getCurrentPosition() > this.extendPos) {
                 extend.setPower(0);
             }
         }
@@ -24,7 +24,7 @@ public class ExtendSubsystem {
         if (negative) {
             extend.setPower(-1);
             extend.setTargetPosition(extend.getCurrentPosition() - extendPos);
-            if (extend.getCurrentPosition() <= extend.getTargetPosition()) {
+            if (extend.getCurrentPosition() < this.extendPos) {
                 extend.setPower(0);
             }
         }

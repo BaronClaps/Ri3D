@@ -36,6 +36,18 @@ public class LiftSubsystem {
         }
     }
 
+    public void presetLift(int liftPos) {
+
+        this.liftPos = lift.getCurrentPosition();
+
+            lift.setPower(1);
+            lift.setTargetPosition(liftPos);
+            if (lift.getCurrentPosition() > this.liftPos) {
+                lift.setPower(0);
+            }
+
+    }
+
     public void resetEncoder(){
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
