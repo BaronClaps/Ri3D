@@ -16,10 +16,13 @@ public class LiftSubsystem {
     }
 
     public void manualLift(int liftPos, boolean negative) {
+
+        this.liftPos = lift.getCurrentPosition();
+
         if (!negative) {
             lift.setPower(1);
             lift.setTargetPosition(lift.getCurrentPosition() + liftPos);
-            if (lift.getCurrentPosition() > lift.getTargetPosition()) {
+            if (lift.getCurrentPosition() > this.liftPos) {
                 lift.setPower(0);
             }
         }
@@ -27,7 +30,7 @@ public class LiftSubsystem {
         if (negative) {
             lift.setPower(-1);
             lift.setTargetPosition(lift.getCurrentPosition() - liftPos);
-            if (lift.getCurrentPosition() <= lift.getTargetPosition()) {
+            if (lift.getCurrentPosition() < this.liftPos) {
                 lift.setPower(0);
             }
         }
