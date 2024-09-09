@@ -23,7 +23,8 @@ public class Auto {
     private RobotStart startLocation;
 
     public VisionSubsystem vision;
-    public ClawSubsystem servo;
+    public ClawSubsystem claw;
+    public ClawSubsystem.ClawState clawState;
     public Follower follower;
 
     public ActionStorage actionStorage;
@@ -37,7 +38,7 @@ public class Auto {
 
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
 
-        servo = new ClawSubsystem(hardwareMap);
+        claw = new ClawSubsystem(hardwareMap, clawState);
         vision = new VisionSubsystem(hardwareMap, telemetry);
 
         this.follower = follower;

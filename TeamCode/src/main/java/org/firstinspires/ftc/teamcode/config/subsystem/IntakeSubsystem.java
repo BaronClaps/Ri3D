@@ -1,28 +1,36 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.sInit;
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.sStart;
-
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
 
 public class IntakeSubsystem {
 
-    private Servo intakeWheels;
+    private CRServo intakeSpin;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
-        intakeWheels = hardwareMap.get(Servo.class, "intakeWheels");
+        intakeSpin = hardwareMap.get(CRServo.class, "intakeSpin");
     }
 
-    public void intakeWheelPos(double intakeWheelPos) {
-        intakeWheels.setPosition(intakeWheelPos);
+    public void setIntakeSpin(double intakeSpinPow) {
+        intakeSpin.setPower(intakeSpinPow);
+    }
+
+    public void intakeSpinIn() {
+        intakeSpin.setPower(1);
+    }
+
+    public void intakeSpinOut() {
+        intakeSpin.setPower(-1);
+    }
+
+    public void intakeSpinStop() {
+        intakeSpin.setPower(0);
     }
 
     public void init() {
+        intakeSpinStop();
     }
-
     public void start() {
+        intakeSpinStop();
     }
-
 }

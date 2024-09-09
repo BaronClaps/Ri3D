@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.config.runmodes;
 
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.LiftSubsystem;
-import org.firstinspires.ftc.teamcode.config.subsystem.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 
@@ -14,9 +14,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Teleop {
 
-    private ClawSubsystem clawSubsystem;
-    private LiftSubsystem liftSubsystem;
-    //private VisionSubsystem visionSubsystem;
+    private ClawSubsystem claw;
+    private ClawSubsystem.ClawState clawState;
+    private LiftSubsystem lift;
+    private ExtendSubsystem extend;
+
 
     private Follower follower;
     private Pose startPose;
@@ -30,42 +32,14 @@ public class Teleop {
     private Gamepad previousGamepad1 = new Gamepad();
     private Gamepad previousGamepad2 = new Gamepad();
 
-    private DcMotorEx leftFront;
-    private DcMotorEx leftRear;
-    private DcMotorEx rightFront;
-    private DcMotorEx rightRear;
-
     public double speed = 0.75;
-
-    private boolean toggleRumble = false;
     private boolean fieldCentric = true;
-
-    Gamepad.RumbleEffect rumbleEffect = new Gamepad.RumbleEffect.Builder()
-            .addStep(0.0, 1.0, 500)  //  Rumble right motor 100% for 500 mSec
-            .addStep(0.0, 0.0, 300)  //  Pause for 300 mSec
-            .addStep(1.0, 0.0, 250)  //  Rumble left motor 100% for 250 mSec
-            .addStep(0.0, 0.0, 250)  //  Pause for 250 mSec
-            .addStep(1.0, 0.0, 250)  //  Rumble left motor 100% for 250 mSec
-            .build();
-
-    Gamepad.RumbleEffect RLB = new Gamepad.RumbleEffect.Builder()
-            .addStep(0.0, 1.0, 500)  //  Rumble right motor 100% for 500 mSec
-            .addStep(1.0, 0.0, 500)  //  Rumble left motor 100% for 500 mSec
-            .addStep(1.0, 1.0, 1000)  //  Rumble both motors 100% for 1000 mSec
-            .build();
-
-    Gamepad.LedEffect rgbEffect = new Gamepad.LedEffect.Builder()
-            .addStep(1, 0, 0, 250) // Show red for 250ms
-            .addStep(0, 1, 0, 250) // Show green for 250ms
-            .addStep(0, 0, 1, 250) // Show blue for 250ms
-            .addStep(1, 1, 1, 250) // Show white for 250ms
-            .build();
 
 
     public Teleop(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, Pose startPose,  boolean fieldCentric, Gamepad gamepad1, Gamepad gamepad2) {
-        clawSubsystem = new ClawSubsystem(hardwareMap);
-        liftSubsystem = new LiftSubsystem(hardwareMap);
-        //visionSubsystem = new VisionSubsystem(hardwareMap, leftFront, rightFront, leftRear, rightRear, telemetry);
+        claw = new ClawSubsystem(hardwareMap, clawState);
+        lift = new LiftSubsystem(hardwareMap);
+        extend = new ExtendSubsystem(hardwareMap);
 
         this.follower = follower;
         this.startPose = startPose;
@@ -74,21 +48,12 @@ public class Teleop {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-
-        /*leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
     }
 
     public void init() {
-        //clawSubsystem.init();
-        liftSubsystem.init();
+        claw.init();
+        lift.init();
+        extend.init();
     }
 
     public void update() {
@@ -97,75 +62,47 @@ public class Teleop {
         currentGamepad1.copy(gamepad1);
         currentGamepad2.copy(gamepad2);
 
-        if (gamepad1.right_trigger > 0.5)
+        if (gamepad1.right_bumper)
             speed = 1;
-        else if (gamepad1.left_trigger > 0.5)
+        else if (gamepad1.left_bumper)
             speed = 0.25;
         else
             speed = 0.75;
 
+        if (gamepad2.left_trigger > .5)
+            lift.manualLift(50, true);
+
+        if (gamepad2.right_trigger > .5)
+            lift.manualLift(50, false);
+
+        if (gamepad2.left_bumper)
+            extend.manualExtend(50, true);
+
+        if (gamepad2.right_bumper)
+            extend.manualExtend(50, false);
+
+        if (currentGamepad2.a && !previousGamepad2.a)
+            claw.switchClawState();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
-
-        /*if (follower.getPose().getY() >= 5)
-            gamepad1.setLedColor(1,0,0,Gamepad.LED_DURATION_CONTINUOUS);
-
-        if (follower.getPose().getY() <= -5)
-            gamepad1.setLedColor(0,1,0,Gamepad.LED_DURATION_CONTINUOUS);
-
-        if (follower.getPose().getX() >= 5)
-            gamepad1.setLedColor(0,0,1,Gamepad.LED_DURATION_CONTINUOUS);
-
-        if (follower.getPose().getX() <= -5)
-            gamepad1.setLedColor(0,1,1,Gamepad.LED_DURATION_CONTINUOUS);
-
-        if (gamepad1.a)
-            follower.setPose(new Pose (follower.getPose().getX(), follower.getPose().getY(), 0));
-
-        if (gamepad1.dpad_down)
-            follower.setPose(new Pose (0, 0, Math.toRadians(180)));
-
-        if (gamepad1.dpad_up)
-            follower.setPose(new Pose (0, 0, 0));
-
-        if (gamepad1.left_bumper)
-            gamepad1.setLedColor(0.25, 0.25, 0.25, 500);
-
-        if (gamepad1.right_bumper)
-            gamepad1.runLedEffect(rgbEffect);
-
-        if (currentGamepad1.x && !previousGamepad1.x)
-            toggleRumble = !toggleRumble;
-
-        if (toggleRumble)
-            gamepad1.runRumbleEffect(RLB);*/
-
-        if (gamepad1.left_trigger > .5)
-            liftSubsystem.manualLift(200, true);
-
-        if (gamepad1.right_trigger > .5)
-            liftSubsystem.manualLift(200, false);
-
-        if(gamepad1.left_bumper)
-            clawSubsystem.init();
-
-        if(gamepad1.right_bumper)
-            clawSubsystem.start();
-
         follower.update();
 
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading", Math.toDegrees(follower.getPose().getHeading()));
 
-        telemetry.addData("Estimated Lift Pos", liftSubsystem.getLiftPos());
-        telemetry.addData("Actual Lift Pos", liftSubsystem.lift.getCurrentPosition());
+        telemetry.addData("Estimated Lift Pos", lift.getLiftPos());
+        telemetry.addData("Actual Lift Pos", lift.lift.getCurrentPosition());
+        telemetry.addData("Estimated Extend Pos", extend.getExtendPos());
+        telemetry.addData("Actual Extend Pos", extend.extend.getCurrentPosition());
+        telemetry.addData("Claw State", clawState);
         telemetry.update();
     }
 
     public void start() {
-        clawSubsystem.start();
-        liftSubsystem.start();
+        claw.start();
+        lift.start();
+        extend.start();
         follower.setPose(startPose);
         follower.startTeleopDrive();
     }

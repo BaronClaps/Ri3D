@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode.config.util;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.runmodes.Auto;
-import org.firstinspires.ftc.teamcode.config.vision.Navigation;
 
 public abstract class BaronAuto extends OpMode {
     public static int pathState;

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.config.vision.Navigation;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
@@ -35,10 +34,11 @@ public class VisionSubsystem {
     private double turn = 0;
     private WebcamName webcam1;
     private double x;
+    private ClawSubsystem.ClawState clawState;
 
 
     public VisionSubsystem(HardwareMap hardwareMap, DcMotor leftFrontDrive, DcMotor rightFrontDrive, DcMotor leftBackDrive, DcMotor rightBackDrive, Telemetry telemetry) {
-        clawSubsystem = new ClawSubsystem(hardwareMap);
+        clawSubsystem = new ClawSubsystem(hardwareMap, clawState);
         this.leftFrontDrive = leftFrontDrive;
         this.rightFrontDrive = rightFrontDrive;
         this.leftBackDrive = leftBackDrive;
@@ -48,25 +48,9 @@ public class VisionSubsystem {
     }
 
     public VisionSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        clawSubsystem = new ClawSubsystem(hardwareMap);
+        clawSubsystem = new ClawSubsystem(hardwareMap, clawState);
         this.telemetry = telemetry;
         webcam1 = hardwareMap.get(WebcamName.class, "webcam1");
-    }
-
-    public void navUpdate(Navigation navigation) {
-        detectProp(x);
-
-        if (x < 100) {
-            navigation = Navigation.LEFT;
-        } else if (x > 100 && x < 200) {
-            navigation = Navigation.CENTER;
-        } else if (x > 200) {
-            navigation = Navigation.RIGHT;
-        }
-    }
-
-    public void detectProp(double x) {
-        x = 10;
     }
 
     public void aprilInit() {

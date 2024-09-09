@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.lStart;
-
 import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,28 +16,21 @@ public class LiftSubsystem {
     }
 
     public void manualLift(int liftPos, boolean negative) {
-        /*lift.setPower(negative * 1);
-        lift.setTargetPosition(lift.getCurrentPosition() + (negative * liftPos));
-        this.liftPos = lift.getCurrentPosition();
-
-        while (abs(lift.getTargetPosition()) < abs(lift.getCurrentPosition())) {
-            lift.setPower(0);
-        }*/
-    if (!negative) {
-        lift.setPower(1);
-        lift.setTargetPosition(lift.getCurrentPosition() + liftPos);
-        if (lift.getCurrentPosition() > liftPos) {
-            lift.setPower(0);
+        if (!negative) {
+            lift.setPower(1);
+            lift.setTargetPosition(lift.getCurrentPosition() + liftPos);
+            if (lift.getCurrentPosition() > lift.getTargetPosition()) {
+                lift.setPower(0);
+            }
         }
-    }
 
-    if (negative) {
-        lift.setPower(-1);
-        lift.setTargetPosition(lift.getCurrentPosition() - liftPos);
-        if (lift.getCurrentPosition() < liftPos) {
-            lift.setPower(0);
+        if (negative) {
+            lift.setPower(-1);
+            lift.setTargetPosition(lift.getCurrentPosition() - liftPos);
+            if (lift.getCurrentPosition() <= lift.getTargetPosition()) {
+                lift.setPower(0);
+            }
         }
-    }
     }
 
     public void resetEncoder(){
