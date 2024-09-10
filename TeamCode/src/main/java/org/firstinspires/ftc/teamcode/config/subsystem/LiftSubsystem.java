@@ -78,32 +78,52 @@ public class LiftSubsystem {
 
     public void toLowBucket() {
         updatePos();
-        lift.setTargetPosition(3100);
+        lift.setTargetPosition(3300);
         lift.setPower(1);
+
+        if (lift.getCurrentPosition() > this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     public void toHighBucket() {
         updatePos();
-        lift.setTargetPosition(4500);
+        lift.setTargetPosition(3300);
         lift.setPower(1);
+
+        if (lift.getCurrentPosition() > this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     public void toLowChamber() {
         updatePos();
-        lift.setTargetPosition(2000);
+        lift.setTargetPosition(3000);
         lift.setPower(1);
+
+        if (lift.getCurrentPosition() > this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     public void toHighChamber() {
         updatePos();
-        lift.setTargetPosition(3500);
+        lift.setTargetPosition(4000);
         lift.setPower(1);
+
+        if (lift.getCurrentPosition() > this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     public void toHumanPlayer() {
         updatePos();
-        lift.setTargetPosition(1000);
+        lift.setTargetPosition(2100);
         lift.setPower(1);
+
+        if (lift.getCurrentPosition() > this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     // Util //

@@ -109,10 +109,10 @@ public class Teleop {
             lift.manual(200, false);
 
         if (gamepad2.left_bumper)
-            extend.manual(200, true);
+            extend.manual(200, false);
 
         if (gamepad2.right_bumper)
-            extend.manual(200, false);
+            extend.manual(200, true);
 
         if (gamepad2.y) {
             lift.toLowBucket();
@@ -127,7 +127,7 @@ public class Teleop {
             intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);}
         else intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
 
-        if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left)
+        if (currentGamepad1.b && !previousGamepad1.b)
             box.switchState();
 
         if (currentGamepad2.x && !previousGamepad2.x)
