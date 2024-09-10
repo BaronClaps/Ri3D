@@ -15,13 +15,17 @@ public class ExtendSubsystem {
     public ExtendSubsystem(HardwareMap hardwareMap) {
         extend = hardwareMap.get(DcMotor.class, "extend");
         extend.setDirection(DcMotorSimple.Direction.REVERSE);
+        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         toZero = new RunAction(this::toZero);
         toHalf = new RunAction(this::toHalf);
         toFull = new RunAction(this::toFull);
     }
 
-    public void manual(int extendPos, boolean negative) {
-        if (!negative) {
+    public void manual(double n){ //(int extendPos, boolean negative) {
+        extend.setPower(n);
+        /*if (!negative) {
             extend.setPower(1);
             extend.setTargetPosition(extend.getCurrentPosition() + extendPos);
             if (extend.getCurrentPosition() > this.pos) {
@@ -35,7 +39,7 @@ public class ExtendSubsystem {
             if (extend.getCurrentPosition() < this.pos) {
                 extend.setPower(0);
             }
-        }
+        }*/
     }
 
     // Preset //
@@ -57,7 +61,7 @@ public class ExtendSubsystem {
 
     public void toHalf() {
         updatePos();
-        extend.setTargetPosition(450);
+        extend.setTargetPosition(1000);
         extend.setPower(1);
 
         if (extend.getCurrentPosition() > this.pos) {
@@ -67,7 +71,7 @@ public class ExtendSubsystem {
 
     public void toFull() {
         updatePos();
-        extend.setTargetPosition(700);
+        extend.setTargetPosition(2000);
         extend.setPower(1);
 
         if (extend.getCurrentPosition() > this.pos) {
@@ -86,13 +90,13 @@ public class ExtendSubsystem {
 
     public void resetEncoder(){
         extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        extend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
     // Init + Start //
     public void init() {
         resetEncoder();
+        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pos = extend.getCurrentPosition();
     }

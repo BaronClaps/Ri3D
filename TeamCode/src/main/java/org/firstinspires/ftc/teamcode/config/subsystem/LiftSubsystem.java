@@ -15,6 +15,8 @@ public class LiftSubsystem {
 
     public LiftSubsystem(HardwareMap hardwareMap) {
         lift = hardwareMap.get(DcMotor.class, "lift");
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         toZero = new RunAction(this::toZero);
         toLowBucket = new RunAction(this::toLowBucket);
@@ -25,24 +27,19 @@ public class LiftSubsystem {
     }
 
     // Manual Control //
-    public void manual(int liftPos, boolean negative) {
-        updatePos();
-
-        if (!negative) {
+    public void manual(double n){ //(int liftPos, boolean negative) {
+            lift.setPower(n);
+        /*if (!negative) {
             lift.setPower(1);
-            lift.setTargetPosition(lift.getCurrentPosition() + liftPos);
-            if (lift.getCurrentPosition() > this.liftPos) {
-                lift.setPower(0);
-            }
+            this.liftPos = this.liftPos + liftPos;
+            lift.setTargetPosition(this.liftPos);
         }
 
         if (negative) {
             lift.setPower(-1);
-            lift.setTargetPosition(lift.getCurrentPosition() - liftPos);
-            if (lift.getCurrentPosition() < this.liftPos) {
-                lift.setPower(0);
-            }
-        }
+            this.liftPos = lift.getCurrentPosition() - liftPos;
+            lift.setTargetPosition(this.liftPos);
+        }*/
     }
 
     // Presets //
@@ -69,9 +66,10 @@ public class LiftSubsystem {
     public void toZero() {
         updatePos();
         lift.setTargetPosition(10);
+        liftPos = 10;
         lift.setPower(-1);
 
-        if (lift.getCurrentPosition() < this.liftPos) {
+        if (lift.getCurrentPosition() < liftPos) {
             lift.setPower(0);
         }
     }
@@ -79,9 +77,10 @@ public class LiftSubsystem {
     public void toLowBucket() {
         updatePos();
         lift.setTargetPosition(3300);
+        liftPos = 3300;
         lift.setPower(1);
 
-        if (lift.getCurrentPosition() > this.liftPos) {
+        if (lift.getCurrentPosition() > liftPos) {
             lift.setPower(0);
         }
     }
@@ -130,7 +129,6 @@ public class LiftSubsystem {
 
     public void resetEncoder(){
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 
@@ -139,13 +137,14 @@ public class LiftSubsystem {
     }
 
     public void updatePos() {
-        this.liftPos = lift.getCurrentPosition();
+        liftPos = lift.getCurrentPosition();
     }
 
     // Init + Start //
 
     public void init() {
         resetEncoder();
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = lift.getCurrentPosition();
     }

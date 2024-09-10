@@ -71,12 +71,12 @@ public class Teleop {
                 intake.spinStop,
                 new ParallelAction(
                         intake.pivotTransfer,
-                        extend.toZero,
-                        lift.toZero,
+                        //extend.toZero,
+                        //lift.toZero,
                         box.toTransfer),
-                new SleepAction(1),
-                intake.spinOut,
-                new SleepAction(0.5),
+                new ParallelAction(
+                    intake.spinOut,
+                    new SleepAction(1)),
                 intake.spinStop
         );
     }
@@ -102,30 +102,27 @@ public class Teleop {
         else
             speed = 0.75;
 
-        if (gamepad2.left_trigger > .5)
-            lift.manual(200, true);
-
-        if (gamepad2.right_trigger > .5)
-            lift.manual(200, false);
+        if (gamepad2.left_trigger > 0.5)
+            lift.manual( -1);
+        else if (gamepad2.right_trigger > 0.5)
+            lift.manual( 1);
+        else
+            lift.manual(0);
 
         if (gamepad2.left_bumper)
-            extend.manual(200, false);
-
-        if (gamepad2.right_bumper)
-            extend.manual(200, true);
-
-        if (gamepad2.y) {
-            lift.toLowBucket();
-        }
+            extend.manual( -1);
+        else if (gamepad2.right_bumper)
+            extend.manual( 1);
+        else
+            extend.manual(0);
 
         if (currentGamepad2.a && !previousGamepad2.a)
             claw.switchState();
 
-        if(gamepad2.dpad_down){
-            intake.setSpinState(IntakeSubsystem.IntakeSpinState.OUT);}
-        else if(gamepad2.dpad_up){
-            intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);}
-        else intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
+        if (gamepad2.b)
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);
+        else
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
 
         if (currentGamepad1.b && !previousGamepad1.b)
             box.switchState();
@@ -133,7 +130,7 @@ public class Teleop {
         if (currentGamepad2.x && !previousGamepad2.x)
             intake.switchPivotState();
 
-        if(currentGamepad2.b && !previousGamepad2.b)
+        if(currentGamepad2.y && !previousGamepad2.y)
             Actions.runBlocking(transfer());
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
