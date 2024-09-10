@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.boxScoringPos;
 import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.boxTransferPos;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,7 +33,7 @@ public class BoxSubsystem {
             box.setPosition(boxTransferPos);
             this.state = BoxState.TRANSFER;
         } else if (boxState == BoxState.SCORING) {
-            box.setPosition(1);
+            box.setPosition(boxScoringPos);
             this.state = BoxState.SCORING;
         }
     }

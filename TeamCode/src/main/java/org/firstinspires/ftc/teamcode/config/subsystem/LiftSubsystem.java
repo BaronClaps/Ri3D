@@ -46,16 +46,34 @@ public class LiftSubsystem {
     }
 
     // Presets //
-    public void preset(int liftPos) {
+    public void preset(int liftPos, boolean negative) {
         updatePos();
-        lift.setTargetPosition(liftPos);
-        lift.setPower(1);
+
+        if (!negative) {
+            lift.setPower(1);
+            lift.setTargetPosition(liftPos);
+            if (lift.getCurrentPosition() > this.liftPos) {
+                lift.setPower(0);
+            }
+        }
+
+        if (negative) {
+            lift.setPower(-1);
+            lift.setTargetPosition(liftPos);
+            if (lift.getCurrentPosition() < this.liftPos) {
+                lift.setPower(0);
+            }
+        }
     }
 
     public void toZero() {
         updatePos();
         lift.setTargetPosition(10);
-        lift.setPower(1);
+        lift.setPower(-1);
+
+        if (lift.getCurrentPosition() < this.liftPos) {
+            lift.setPower(0);
+        }
     }
 
     public void toLowBucket() {
