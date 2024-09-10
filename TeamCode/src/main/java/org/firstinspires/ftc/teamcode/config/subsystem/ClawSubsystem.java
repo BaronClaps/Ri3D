@@ -4,8 +4,6 @@ import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.*;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.config.util.RobotConstants;
-
 
 public class ClawSubsystem {
 
@@ -14,41 +12,43 @@ public class ClawSubsystem {
     }
 
     private Servo claw;
-    private ClawState clawState;
+    private ClawState state;
 
     public ClawSubsystem(HardwareMap hardwareMap, ClawState clawState) {
         claw = hardwareMap.get(Servo.class, "claw");
-        this.clawState = clawState;
+        this.state = clawState;
     }
 
-    public void clawPos(double clawPos) {
+    public void setPos(double clawPos) {
         claw.setPosition(clawPos);
     }
 
+    public void setState(ClawState clawState) {
+        if (clawState == ClawState.CLOSED) {
+            claw.setPosition(clawClose);
+            this.state = ClawState.CLOSED;
+        } else if (clawState == ClawState.OPEN) {
+            claw.setPosition(clawOpen);
+            this.state = ClawState.OPEN;
+        }
+    }
+
+    public void switchState() {
+        if (state == ClawState.CLOSED) {
+            setState(ClawState.OPEN);
+        } else if (state == ClawState.OPEN) {
+            setState(ClawState.CLOSED);
+        }
+    }
+
     public void init() {
-        setClawState(ClawState.CLOSED);
+        setState(ClawState.CLOSED);
     }
 
     public void start() {
-        setClawState(ClawState.OPEN);
+        setState(ClawState.OPEN);
     }
 
-    public void setClawState(ClawState clawState) {
-        if (clawState == ClawState.CLOSED) {
-            claw.setPosition(clawClose);
-            this.clawState = ClawState.CLOSED;
-        } else if (clawState == ClawState.OPEN) {
-            claw.setPosition(clawOpen);
-            this.clawState = ClawState.OPEN;
-        }
-    }
 
-    public void switchClawState() {
-        if (clawState == ClawState.CLOSED) {
-            setClawState(ClawState.OPEN);
-        } else if (clawState == ClawState.OPEN) {
-            setClawState(ClawState.CLOSED);
-        }
-    }
 
 }

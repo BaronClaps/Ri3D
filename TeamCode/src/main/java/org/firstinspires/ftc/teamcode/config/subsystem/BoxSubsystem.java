@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.*;
+
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.boxTransferPos;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.config.util.RobotConstants;
+import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 
 public class BoxSubsystem {
@@ -14,41 +15,62 @@ public class BoxSubsystem {
     }
 
     private Servo box;
-    private BoxState boxState;
+    private BoxState state;
+    public RunAction toTransfer, toScoring;
 
-    public BoxSubsystem(HardwareMap hardwareMap, BoxState BoxState) {
+    public BoxSubsystem(HardwareMap hardwareMap, BoxState state) {
         box = hardwareMap.get(Servo.class, "box");
-        this.boxState = BoxState;
+        this.state = state;
+
+        toTransfer = new RunAction(this::toTransfer);
+        toScoring = new RunAction(this::toScoring);
     }
 
-    public void BoxPos(double BoxPos) {
+    // State //
+    public void setState(BoxState boxState) {
+        if (boxState == BoxState.TRANSFER) {
+            box.setPosition(boxTransferPos);
+            this.state = BoxState.TRANSFER;
+        } else if (boxState == BoxState.SCORING) {
+            box.setPosition(1);
+            this.state = BoxState.SCORING;
+        }
+    }
+
+    public void switchState() {
+        if (state == BoxState.TRANSFER) {
+            setState(BoxState.SCORING);
+        } else if (state == BoxState.SCORING) {
+            setState(BoxState.TRANSFER);
+        }
+    }
+
+    // Preset //
+
+    public void toTransfer() {
+        setState(BoxState.TRANSFER);
+    }
+
+    public void toScoring() {
+        setState(BoxState.SCORING);
+    }
+
+    // Util //
+    public void setPos(double BoxPos) {
         box.setPosition(BoxPos);
     }
 
+    public double getPos() {
+        return box.getPosition();
+    }
+
+    // Init + Start //
     public void init() {
-        setBoxState(BoxState.TRANSFER);
+        setState(BoxState.TRANSFER);
     }
 
     public void start() {
-        setBoxState(BoxState.TRANSFER);
-    }
-
-    public void setBoxState(BoxState BoxState) {
-        if (BoxState == BoxState.TRANSFER) {
-            box.setPosition(0);
-            this.boxState = BoxState.TRANSFER;
-        } else if (BoxState == BoxState.SCORING) {
-            box.setPosition(1);
-            this.boxState = BoxState.SCORING;
-        }
-    }
-
-    public void switchBoxState() {
-        if (boxState == BoxState.TRANSFER) {
-            setBoxState(BoxState.SCORING);
-        } else if (boxState == BoxState.SCORING) {
-            setBoxState(BoxState.TRANSFER);
-        }
+        setState(BoxState.TRANSFER);
     }
 
 }

@@ -60,7 +60,7 @@ public class VisionSubsystem {
 
     public void aprilUpdate() {
         servoAlignToTag(-1);
-        clawSubsystem.clawPos(targetPosition);
+        clawSubsystem.setPos(targetPosition);
         telemetryAprilTag();
     }
 

@@ -1,56 +1,114 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.clawClose;
-import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.clawOpen;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakePivotGroundPos;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakePivotTransferPos;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinInPwr;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinOutPwr;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinStopPwr;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
+
 public class IntakeSubsystem {
 
-    public enum IntakeState {
+    public enum IntakeSpinState {
         IN, OUT, STOP
     }
 
-    private CRServo intakeSpin;
-    private Servo intakePivot;
-    private IntakeState intakeState;
-
-    public IntakeSubsystem(HardwareMap hardwareMap, IntakeState intakeState) {
-        intakeSpin = hardwareMap.get(CRServo.class, "intakeSpin");
-        intakePivot = hardwareMap.get(Servo.class, "intakePivot");
-        this.intakeState = intakeState;
+    public enum IntakePivotState {
+        TRANSFER, GROUND
     }
 
-    public void setIntakeState(IntakeState intakeState) {
-        if (intakeState == IntakeState.IN) {
-            intakeSpin.setPower(1);
-            this.intakeState = IntakeState.IN;
-        } else if (intakeState == IntakeState.OUT) {
-            intakeSpin.setPower(-.25);
-            this.intakeState = IntakeState.OUT;
-        } else if (intakeState == IntakeState.STOP){
-            intakeSpin.setPower(0);
-            this.intakeState = IntakeState.STOP;
+    private CRServo spin;
+    private IntakeSpinState spinState;
+
+    private Servo pivot;
+    private IntakePivotState pivotState;
+
+    public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround;
+
+    public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState) {
+        spin = hardwareMap.get(CRServo.class, "intakeSpin");
+        pivot = hardwareMap.get(Servo.class, "intakePivot");
+        this.spinState = spinState;
+        this.pivotState = pivotState;
+
+        spinIn = new RunAction(this::spinIn);
+        spinOut = new RunAction(this::spinOut);
+        spinStop = new RunAction(this::spinStop);
+        pivotTransfer = new RunAction(this::pivotTransfer);
+        pivotGround = new RunAction(this::pivotGround);
+
+    }
+
+    // ----------------- Intake Spin -----------------//
+
+    public void setSpinState(IntakeSpinState spinState) {
+        if (spinState == IntakeSpinState.IN) {
+            spinIn();
+        } else if (spinState == IntakeSpinState.OUT) {
+            spinOut();
+        } else if (spinState == IntakeSpinState.STOP){
+            spinStop();
         }
     }
 
-    public void intakePivotTransfer() {
-        intakePivot.setPosition(0.57);
+    public void spinIn() {
+        spin.setPower(intakeSpinInPwr);
+        this.spinState = IntakeSpinState.IN;
     }
 
-    public void intakePivotGround() {
-        intakePivot.setPosition(1);
+    public void spinOut() {
+        spin.setPower(intakeSpinOutPwr);
+        this.spinState = IntakeSpinState.OUT;
     }
+
+    public void spinStop() {
+        spin.setPower(intakeSpinStopPwr);
+        this.spinState = IntakeSpinState.STOP;
+    }
+
+    // ----------------- Intake Pivot -----------------//
+
+    public void setPivotState(IntakePivotState pivotState) {
+        if (pivotState == IntakePivotState.TRANSFER) {
+            pivotTransfer();
+        } else if (pivotState == IntakePivotState.GROUND) {
+            pivotGround();
+        }
+    }
+
+    public void switchPivotState() {
+        if (pivotState == IntakePivotState.TRANSFER) {
+            pivotGround();
+            pivotState = IntakePivotState.GROUND;
+        } else if (pivotState == IntakePivotState.GROUND) {
+            pivotTransfer();
+            pivotState = IntakePivotState.TRANSFER;
+        }
+    }
+
+    public void pivotTransfer() {
+        pivot.setPosition(intakePivotTransferPos);
+        this.pivotState = IntakePivotState.TRANSFER;
+    }
+
+    public void pivotGround() {
+        pivot.setPosition(intakePivotGroundPos);
+        this.pivotState = IntakePivotState.GROUND;
+    }
+
 
     public void init() {
-        setIntakeState(IntakeState.STOP);
-        intakePivotTransfer();
+        setSpinState(IntakeSpinState.STOP);
+        setPivotState(IntakePivotState.TRANSFER);
 
     }
     public void start() {
-        setIntakeState(IntakeState.STOP);
-        intakePivotTransfer();
+        setSpinState(IntakeSpinState.STOP);
+        setPivotState(IntakePivotState.TRANSFER);
     }
 }

@@ -71,22 +71,22 @@ public class Auto {
         switch (startLocation) {
             case BLUE_BUCKET:
                 startPose = blueBucketStart;
-                parkPose = blueBucketPark;
+                //parkPose = blueBucketPark;
                 break;
 
             case BLUE_OBSERVATION:
                 startPose = blueObservationStart;
-                parkPose = blueObservationPark;
+                //parkPose = blueObservationPark;
                 break;
 
             case RED_BUCKET:
                 startPose = redBucketStart;
-                parkPose = redBucketPark;
+                //parkPose = redBucketPark;
                 break;
 
             case RED_OBSERVATION:
                 startPose = redObservationStart;
-                parkPose = redObservationPark;
+                //parkPose = redObservationPark;
                 break;
         }
 

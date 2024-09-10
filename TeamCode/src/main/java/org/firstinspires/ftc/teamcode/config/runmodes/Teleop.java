@@ -8,11 +8,17 @@ import org.firstinspires.ftc.teamcode.config.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.config.util.action.Action;
+import org.firstinspires.ftc.teamcode.config.util.action.Actions;
+import org.firstinspires.ftc.teamcode.config.util.action.InstantAction;
+import org.firstinspires.ftc.teamcode.config.util.action.ParallelAction;
+import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
+import org.firstinspires.ftc.teamcode.config.util.action.SequentialAction;
+import org.firstinspires.ftc.teamcode.config.util.action.SleepAction;
 
 public class Teleop {
 
@@ -21,7 +27,8 @@ public class Teleop {
     private LiftSubsystem lift;
     private ExtendSubsystem extend;
     private IntakeSubsystem intake;
-    private IntakeSubsystem.IntakeState intakeState;
+    private IntakeSubsystem.IntakeSpinState intakeSpinState;
+    private IntakeSubsystem.IntakePivotState intakePivotState;
     private BoxSubsystem box;
     private BoxSubsystem.BoxState boxState;
 
@@ -46,7 +53,7 @@ public class Teleop {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap);
         extend = new ExtendSubsystem(hardwareMap);
-        intake = new IntakeSubsystem(hardwareMap, intakeState);
+        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
         box = new BoxSubsystem(hardwareMap, boxState);
 
 
@@ -57,6 +64,21 @@ public class Teleop {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+    }
+
+    public Action transfer() {
+        return new SequentialAction(
+                intake.spinStop,
+                new ParallelAction(
+                        intake.pivotTransfer,
+                        extend.toZero,
+                        lift.toZero,
+                        box.toTransfer),
+                new SleepAction(1),
+                intake.spinOut,
+                new SleepAction(0.5),
+                intake.spinStop
+        );
     }
 
     public void init() {
@@ -81,38 +103,38 @@ public class Teleop {
             speed = 0.75;
 
         if (gamepad2.left_trigger > .5)
-            lift.manualLift(200, true);
+            lift.manual(200, true);
 
         if (gamepad2.right_trigger > .5)
-            lift.manualLift(200, false);
+            lift.manual(200, false);
 
         if (gamepad2.left_bumper)
-            extend.manualExtend(200, true);
+            extend.manual(200, true);
 
         if (gamepad2.right_bumper)
-            extend.manualExtend(200, false);
+            extend.manual(200, false);
 
         if (gamepad2.y) {
-            lift.presetLift(3100);
+            lift.toLowBucket();
         }
 
         if (currentGamepad2.a && !previousGamepad2.a)
-            claw.switchClawState();
+            claw.switchState();
 
         if(gamepad2.dpad_down){
-            intake.setIntakeState(IntakeSubsystem.IntakeState.OUT);}
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.OUT);}
         else if(gamepad2.dpad_up){
-            intake.setIntakeState(IntakeSubsystem.IntakeState.IN);}
-        else intake.setIntakeState(IntakeSubsystem.IntakeState.STOP);
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);}
+        else intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
 
         if(gamepad2.dpad_left)
-            box.switchBoxState();
+            box.switchState();
 
-        if (gamepad2.x)
-            intake.intakePivotGround();
+        if (currentGamepad2.x && !previousGamepad2.x)
+            intake.switchPivotState();
 
-        if(gamepad2.b)
-            intake.intakePivotTransfer();
+        if(currentGamepad2.b && !previousGamepad2.b)
+            Actions.runBlocking(transfer());
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y * speed, -gamepad1.left_stick_x * speed, -gamepad1.right_stick_x * speed, !fieldCentric);
         follower.update();
@@ -121,11 +143,12 @@ public class Teleop {
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading", Math.toDegrees(follower.getPose().getHeading()));
 
-        telemetry.addData("Estimated Lift Pos", lift.getLiftPos());
         telemetry.addData("Actual Lift Pos", lift.lift.getCurrentPosition());
-        telemetry.addData("Estimated Extend Pos", extend.getExtendPos());
         telemetry.addData("Actual Extend Pos", extend.extend.getCurrentPosition());
         telemetry.addData("Claw State", clawState);
+        telemetry.addData("Intake Spin State", intakeSpinState);
+        telemetry.addData("Intake Pivot State", intakePivotState);
+        telemetry.addData("Box State", boxState);
         telemetry.update();
     }
 
@@ -138,5 +161,7 @@ public class Teleop {
         follower.setPose(startPose);
         follower.startTeleopDrive();
     }
+
+
 
 }
