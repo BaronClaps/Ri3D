@@ -127,7 +127,7 @@ public class Teleop {
             intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);}
         else intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
 
-        if(gamepad2.dpad_left)
+        if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left)
             box.switchState();
 
         if (currentGamepad2.x && !previousGamepad2.x)
