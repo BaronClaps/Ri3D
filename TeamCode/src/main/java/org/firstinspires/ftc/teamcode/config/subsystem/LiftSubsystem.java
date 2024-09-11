@@ -53,8 +53,8 @@ public class LiftSubsystem {
 
     public void toZero() {
         updatePos();
-        lift.setTargetPosition(10);
         lift.setPower(1);
+        lift.setTargetPosition(10);
     }
 
     public void toLowBucket() {

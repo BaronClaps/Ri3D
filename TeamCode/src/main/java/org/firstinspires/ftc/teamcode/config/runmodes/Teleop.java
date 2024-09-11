@@ -80,9 +80,7 @@ public class Teleop {
                 intake.spinOut,
                 new SleepAction(1),
                 intake.spinIn,
-                new SleepAction(0.25),
-                intake.spinStop,
-                intake.pivotGround
+                intake.spinStop
         );
     }
 
@@ -107,12 +105,15 @@ public class Teleop {
         else
             speed = 0.75;
 
-        if (gamepad2.left_trigger > 0.5)
+        lift.manual(gamepad2.right_trigger - gamepad2.left_trigger);
+
+
+        /*if (gamepad2.left_trigger > 0.5)
             lift.manual(-1);
         else if (gamepad2.right_trigger > 0.5)
             lift.manual(1);
         else
-            lift.manual(0);
+            lift.manual(0);*/
 
         if (gamepad2.left_bumper)
             extend.manual(-1);
@@ -135,11 +136,14 @@ public class Teleop {
             intake.spin.setPower(0);
         }
 
-        if (currentGamepad1.b && !previousGamepad1.b)
+        if (currentGamepad1.a && !previousGamepad1.a)
             box.switchState();
 
         if (currentGamepad2.x && !previousGamepad2.x)
             intake.switchPivotState();
+
+        if (currentGamepad2.b && !previousGamepad2.b)
+            intake.setPivotState(IntakeSubsystem.IntakePivotState.TRANSFER);
 
         if(currentGamepad2.y && !previousGamepad2.y)
             Actions.runBlocking(transfer());
