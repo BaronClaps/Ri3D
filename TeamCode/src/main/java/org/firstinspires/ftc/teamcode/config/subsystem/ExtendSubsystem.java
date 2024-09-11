@@ -42,13 +42,6 @@ public class ExtendSubsystem {
         }*/
     }
 
-    // Preset //
-    public void preset(int pos) {
-        updatePos();
-        extend.setTargetPosition(pos);
-        extend.setPower(1);
-    }
-
     public void toZero() {
         updatePos();
         extend.setTargetPosition(10);
@@ -90,7 +83,6 @@ public class ExtendSubsystem {
 
     public void resetEncoder(){
         extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
     }
 
     // Init + Start //

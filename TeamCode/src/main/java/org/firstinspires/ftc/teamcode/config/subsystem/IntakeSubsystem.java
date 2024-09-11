@@ -22,7 +22,7 @@ public class IntakeSubsystem {
         TRANSFER, GROUND
     }
 
-    private CRServo spin;
+    public CRServo spin;
     private IntakeSpinState spinState;
 
     private Servo pivot;
@@ -46,13 +46,17 @@ public class IntakeSubsystem {
 
     // ----------------- Intake Spin -----------------//
 
-    public void setSpinState(IntakeSpinState spinState) {
-        if (spinState == IntakeSpinState.IN) {
-            spinIn();
-        } else if (spinState == IntakeSpinState.OUT) {
-            spinOut();
-        } else if (spinState == IntakeSpinState.STOP){
-            spinStop();
+    public void setSpinState(IntakeSpinState spinState, boolean changeStateOnly) {
+        if (changeStateOnly) {
+            this.spinState = spinState;
+        } else {
+            if (spinState == IntakeSpinState.IN) {
+                spinIn();
+            } else if (spinState == IntakeSpinState.OUT) {
+                spinOut();
+            } else if (spinState == IntakeSpinState.STOP) {
+                spinStop();
+            }
         }
     }
 
@@ -103,12 +107,12 @@ public class IntakeSubsystem {
 
 
     public void init() {
-        setSpinState(IntakeSpinState.STOP);
+        setSpinState(IntakeSpinState.STOP, false);
         setPivotState(IntakePivotState.TRANSFER);
 
     }
     public void start() {
-        setSpinState(IntakeSpinState.STOP);
+        setSpinState(IntakeSpinState.STOP, false);
         setPivotState(IntakePivotState.TRANSFER);
     }
 }

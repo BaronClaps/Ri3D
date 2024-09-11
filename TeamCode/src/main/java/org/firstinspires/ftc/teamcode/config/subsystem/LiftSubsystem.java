@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 public class LiftSubsystem {
 
     public DcMotor lift;
-    private int liftPos;
+    private int pos;
     public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toHighChamber, toHumanPlayer;
 
     public LiftSubsystem(HardwareMap hardwareMap) {
@@ -28,7 +28,7 @@ public class LiftSubsystem {
 
     // Manual Control //
     public void manual(double n){ //(int liftPos, boolean negative) {
-            lift.setPower(n);
+        lift.setPower(n);
         /*if (!negative) {
             lift.setPower(1);
             this.liftPos = this.liftPos + liftPos;
@@ -42,87 +42,49 @@ public class LiftSubsystem {
         }*/
     }
 
-    // Presets //
-    public void preset(int liftPos, boolean negative) {
-        updatePos();
-
-        if (!negative) {
-            lift.setPower(1);
-            lift.setTargetPosition(liftPos);
-            if (lift.getCurrentPosition() > this.liftPos) {
-                lift.setPower(0);
-            }
-        }
-
-        if (negative) {
-            lift.setPower(-1);
-            lift.setTargetPosition(liftPos);
-            if (lift.getCurrentPosition() < this.liftPos) {
-                lift.setPower(0);
-            }
+    public void manual(double n, int liftPos) {
+        lift.setPower(n);
+       updatePos();
+        lift.setTargetPosition(liftPos + pos);
+        if (lift.getCurrentPosition() > this.pos) {
+            lift.setPower(0);
         }
     }
 
     public void toZero() {
         updatePos();
         lift.setTargetPosition(10);
-        liftPos = 10;
-        lift.setPower(-1);
-
-        if (lift.getCurrentPosition() < liftPos) {
-            lift.setPower(0);
-        }
+        lift.setPower(1);
     }
 
     public void toLowBucket() {
         updatePos();
-        lift.setTargetPosition(3300);
-        liftPos = 3300;
         lift.setPower(1);
-
-        if (lift.getCurrentPosition() > liftPos) {
-            lift.setPower(0);
-        }
+        lift.setTargetPosition(3300);
     }
 
     public void toHighBucket() {
         updatePos();
-        lift.setTargetPosition(3300);
         lift.setPower(1);
-
-        if (lift.getCurrentPosition() > this.liftPos) {
-            lift.setPower(0);
-        }
+        lift.setTargetPosition(3300);
     }
 
     public void toLowChamber() {
         updatePos();
-        lift.setTargetPosition(3000);
         lift.setPower(1);
-
-        if (lift.getCurrentPosition() > this.liftPos) {
-            lift.setPower(0);
-        }
+        lift.setTargetPosition(3000);
     }
 
     public void toHighChamber() {
         updatePos();
-        lift.setTargetPosition(4000);
         lift.setPower(1);
-
-        if (lift.getCurrentPosition() > this.liftPos) {
-            lift.setPower(0);
-        }
+        lift.setTargetPosition(4000);
     }
 
     public void toHumanPlayer() {
         updatePos();
-        lift.setTargetPosition(2100);
         lift.setPower(1);
-
-        if (lift.getCurrentPosition() > this.liftPos) {
-            lift.setPower(0);
-        }
+        lift.setTargetPosition(2100);
     }
 
     // Util //
@@ -133,11 +95,11 @@ public class LiftSubsystem {
     }
 
     public double getPos() {
-        return liftPos;
+        return pos;
     }
 
     public void updatePos() {
-        liftPos = lift.getCurrentPosition();
+        pos = lift.getCurrentPosition();
     }
 
     // Init + Start //
@@ -146,7 +108,7 @@ public class LiftSubsystem {
         resetEncoder();
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftPos = lift.getCurrentPosition();
+        pos = lift.getCurrentPosition();
     }
 
     public void start() {}

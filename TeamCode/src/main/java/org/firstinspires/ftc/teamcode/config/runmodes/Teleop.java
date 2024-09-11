@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.config.runmodes;
 
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinInPwr;
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinOutPwr;
+
 import org.firstinspires.ftc.teamcode.config.subsystem.BoxSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
@@ -74,10 +77,12 @@ public class Teleop {
                         //extend.toZero,
                         //lift.toZero,
                         box.toTransfer),
-                new ParallelAction(
-                    intake.spinOut,
-                    new SleepAction(1)),
-                intake.spinStop
+                intake.spinOut,
+                new SleepAction(1),
+                intake.spinIn,
+                new SleepAction(0.25),
+                intake.spinStop,
+                intake.pivotGround
         );
     }
 
@@ -103,26 +108,32 @@ public class Teleop {
             speed = 0.75;
 
         if (gamepad2.left_trigger > 0.5)
-            lift.manual( -1);
+            lift.manual(-1);
         else if (gamepad2.right_trigger > 0.5)
-            lift.manual( 1);
+            lift.manual(1);
         else
             lift.manual(0);
 
         if (gamepad2.left_bumper)
-            extend.manual( -1);
+            extend.manual(-1);
         else if (gamepad2.right_bumper)
-            extend.manual( 1);
+            extend.manual(1);
         else
             extend.manual(0);
 
         if (currentGamepad2.a && !previousGamepad2.a)
             claw.switchState();
 
-        if (gamepad2.b)
-            intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN);
-        else
-            intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP);
+        if (gamepad2.b) {
+            intake.spin.setPower(intakeSpinInPwr);
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.IN, true);
+        } else if (gamepad2.dpad_down) {
+            intake.spin.setPower(intakeSpinOutPwr);
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.OUT, true);
+        } else {
+            intake.setSpinState(IntakeSubsystem.IntakeSpinState.STOP, true);
+            intake.spin.setPower(0);
+        }
 
         if (currentGamepad1.b && !previousGamepad1.b)
             box.switchState();
