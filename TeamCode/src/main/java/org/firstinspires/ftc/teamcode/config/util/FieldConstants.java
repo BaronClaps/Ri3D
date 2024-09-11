@@ -13,8 +13,8 @@ public class FieldConstants {
 
     public static final Pose blueBucketStart = new Pose(8.5, 84, 0);
     public static final Pose blueObservationStart = new Pose(8.5, 36, 0);
-    public static final Pose redBucketStart = new Pose(144-8.5, 84, 0);
-    public static final Pose redObservationStart = new Pose(144-8.5, 36, 0);
+    public static final Pose redBucketStart = new Pose(144-8.5, 84, Math.toRadians(180));
+    public static final Pose redObservationStart = new Pose(144-8.5, 36, Math.toRadians(180));
 
     // Blue Bucket Sample Poses
     private static final Pose blueBucketLeftSample = new Pose(2.5+9.75+10.5, 4*24+1.5);

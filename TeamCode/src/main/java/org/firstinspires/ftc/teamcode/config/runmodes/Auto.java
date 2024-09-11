@@ -8,7 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.config.subsystem.BoxSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.config.subsystem.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
@@ -22,32 +26,39 @@ public class Auto {
 
     private RobotStart startLocation;
 
-    public VisionSubsystem vision;
-    public ClawSubsystem claw;
-    public ClawSubsystem.ClawState clawState;
-    public Follower follower;
+    private ClawSubsystem claw;
+    private ClawSubsystem.ClawState clawState;
+    private LiftSubsystem lift;
+    private ExtendSubsystem extend;
+    private IntakeSubsystem intake;
+    private IntakeSubsystem.IntakeSpinState intakeSpinState;
+    private IntakeSubsystem.IntakePivotState intakePivotState;
+    private BoxSubsystem box;
+    private BoxSubsystem.BoxState boxState;
 
-    public ActionStorage actionStorage;
+    public Follower follower;
+    public Telemetry telemetry;
 
     private boolean isBlue;
     private boolean isBucket;
 
-    public Path purple;
-    public PathChain yellow, park;
-    private Pose startPose, purplePose, yellowPose, parkPose;
+    public Path preload, element1, score1, element2, score2, element3, score3, park;
+    private Pose startPose, preloadPose, element1Pose, element2Pose, element3Pose, elementScorePose, parkPose;
 
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
-
         claw = new ClawSubsystem(hardwareMap, clawState);
-        vision = new VisionSubsystem(hardwareMap, telemetry);
+        lift = new LiftSubsystem(hardwareMap);
+        extend = new ExtendSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
+        box = new BoxSubsystem(hardwareMap, boxState);
 
         this.follower = follower;
+        this.telemetry = telemetry;
 
         this.isBlue = isBlue;
         this.isBucket = isBucket;
 
         startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
-
     }
 
     public void init() {
@@ -55,12 +66,14 @@ public class Auto {
         buildPaths();
     }
 
-    public void init_loop() {
-
-    }
+    public void init_loop() {}
 
     public void start() {
-
+        claw.start();
+        lift.start();
+        extend.start();
+        intake.start();
+        box.start();
     }
 
     public void update() {
@@ -95,25 +108,11 @@ public class Auto {
     public void buildPaths() {
         follower.setStartingPose(startPose);
 
-        purple = new Path(new BezierLine(new Point(startPose), new Point(purplePose)));
-        purple.setLinearHeadingInterpolation(startPose.getHeading(), purplePose.getHeading());
+        preload = new Path(new BezierLine(new Point(startPose), new Point(preloadPose)));
+        preload.setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading());
 
-        if (!isBucket) {
-            yellow = new PathBuilder()
-                    .addPath(new Path(new BezierLine(new Point(purplePose), new Point(yellowPose))))
-                    .setConstantHeadingInterpolation(yellowPose.getHeading())
-                    .build();
-        } else {
-            yellow = new PathBuilder()
-                    .addPath(new Path(new BezierLine(new Point(purplePose), new Point(yellowPose))))
-                    .setConstantHeadingInterpolation(yellowPose.getHeading())
-                    .build();
-        }
-
-        park = new PathBuilder()
-                .addPath(new Path(new BezierCurve(new Point(yellowPose), new Point(yellowPose.getX(), 108, Point.CARTESIAN), new Point(parkPose.getX(), 108, Point.CARTESIAN))))
-                .setLinearHeadingInterpolation(yellowPose.getHeading(), parkPose.getHeading())
-                .build();
+        park = new Path(new BezierCurve(new Point(elementScorePose), new Point(elementScorePose.getX(), 108, Point.CARTESIAN), new Point(parkPose.getX(), 108, Point.CARTESIAN)));
+        park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading());
     }
 
 

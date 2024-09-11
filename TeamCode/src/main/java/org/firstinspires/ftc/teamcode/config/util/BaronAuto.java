@@ -8,10 +8,16 @@ import org.firstinspires.ftc.teamcode.config.runmodes.Auto;
 public abstract class BaronAuto extends OpMode {
     public static int pathState;
     public Auto auto;
+    public boolean isBlue, isBucket;
+
+    public void setAuto(boolean isBlue, boolean isBucket){
+        this.isBlue = isBlue;
+        this.isBucket = isBucket;
+    }
 
     @Override
     public void init() {
-        auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
+        auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), isBlue, isBucket);
         auto.init();
     }
 
@@ -31,11 +37,9 @@ public abstract class BaronAuto extends OpMode {
         pathUpdate();
     }
 
-    @Override
-    public void stop() {
-    }
-
-
     abstract public void pathUpdate();
-    abstract public void setPathState(int x);
+
+    public void setPathState(int x) {
+        pathState = x;
+    }
 }
