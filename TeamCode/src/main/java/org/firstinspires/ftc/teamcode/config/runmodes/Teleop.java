@@ -142,7 +142,7 @@ public class Teleop {
         if (currentGamepad2.x && !previousGamepad2.x)
             intake.switchPivotState();
 
-        if (currentGamepad2.b && !previousGamepad2.b)
+        if (currentGamepad1.b && !previousGamepad1.b)
             intake.setPivotState(IntakeSubsystem.IntakePivotState.TRANSFER);
 
         if(currentGamepad2.y && !previousGamepad2.y)

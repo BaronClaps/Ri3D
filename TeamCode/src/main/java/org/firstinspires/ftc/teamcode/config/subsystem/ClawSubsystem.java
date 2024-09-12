@@ -46,7 +46,7 @@ public class ClawSubsystem {
     }
 
     public void start() {
-        setState(ClawState.OPEN);
+        setState(ClawState.CLOSED);
     }
 
 
