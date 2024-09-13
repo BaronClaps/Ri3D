@@ -12,11 +12,22 @@ public class ExtendSubsystem {
     private int pos;
     public RunAction toZero, toHalf, toFull;
 
+    public PIDController extendPID;
+    public static int target;
+    public static double p = 0, i = 0, d = 0;
+    public static double f = 0;
+    private final double ticks_in_degrees = 537.7 / 360.0;
+
     public ExtendSubsystem(HardwareMap hardwareMap) {
+        this.telemetry = telemetry;
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         extend = hardwareMap.get(DcMotor.class, "extend");
         extend.setDirection(DcMotorSimple.Direction.REVERSE);
         extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        extendPID = new PIDController(p, i, d);
 
         toZero = new RunAction(this::toZero);
         toHalf = new RunAction(this::toHalf);
@@ -25,21 +36,27 @@ public class ExtendSubsystem {
 
     public void manual(double n){ //(int extendPos, boolean negative) {
         extend.setPower(n);
-        /*if (!negative) {
-            extend.setPower(1);
-            extend.setTargetPosition(extend.getCurrentPosition() + extendPos);
-            if (extend.getCurrentPosition() > this.pos) {
-                extend.setPower(0);
-            }
-        }
+    }
 
-        if (negative) {
-            extend.setPower(-1);
-            extend.setTargetPosition(extend.getCurrentPosition() - extendPos);
-            if (extend.getCurrentPosition() < this.pos) {
-                extend.setPower(0);
-            }
-        }*/
+    public void setTarget(int b) {
+        target = b;
+    }
+
+    public void addToTarget(int b) {
+        target += b;
+    }
+
+    public void updatePIDF(){
+        extendPID.setPID(p,i,d);
+        updatePos();
+        double pid = extendPID.calculate(pos, target);
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees)) * f;
+
+        double power = pid + ff;
+
+        lift.setPower(power);
+        telemetry.addData("extend pos", pos);
+        telemetry.addData("extend target", target);
     }
 
     public void toZero() {

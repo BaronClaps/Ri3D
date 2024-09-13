@@ -18,7 +18,7 @@ public class LiftSubsystem {
     public static int target;
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
-    private final double ticks_in_degrees = 537.7 / 180.0;
+    private final double ticks_in_degrees = 537.7 / 360.0;
 
 
     public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -60,8 +60,8 @@ public class LiftSubsystem {
         double power = pid + ff;
 
         lift.setPower(power);
-        telemetry.addData("pos", pos);
-        telemetry.addData("target", target);
+        telemetry.addData("lift pos", pos);
+        telemetry.addData("lift target", target);
     }
 
     public void toZero() {
