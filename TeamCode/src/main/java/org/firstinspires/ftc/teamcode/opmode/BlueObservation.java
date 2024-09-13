@@ -14,11 +14,14 @@ import org.firstinspires.ftc.teamcode.config.util.action.Actions;
 @Autonomous(name="BlueObservation", group="Blue")
 public class BlueObservation extends OpMode {
     public int pathState;
+    public Follower follower;
+
     public Auto auto;
 
     @Override
     public void init() {
-        auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), true, false);
+        follower = new Follower(hardwareMap);
+        auto = new Auto(hardwareMap, telemetry, follower, true, false);
     }
 
     @Override
@@ -29,27 +32,27 @@ public class BlueObservation extends OpMode {
     @Override
     public void start() {
         auto.start();
-        //setPathState(0);
+        setPathState(0);
     }
 
     @Override
     public void loop() {
         auto.update();
-        //pathUpdate();
+        pathUpdate();
     }
 
     public void pathUpdate() {
         switch (pathState) {
             case 0:
                 auto.follower.followPath(auto.preload);
-                setPathState(1);
+                setPathState(-1);
                 break;
-            case 1:
+            /*case 1:
                 if(auto.pathNotBusy()) {
                     auto.follower.followPath(auto.element2);
                 }
                 setPathState(-1);
-                break;
+                break;*/
         }
     }
 
