@@ -47,8 +47,8 @@ public class Auto {
 
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
-        lift = new LiftSubsystem(hardwareMap);
-        extend = new ExtendSubsystem(hardwareMap);
+        lift = new LiftSubsystem(hardwareMap, telemetry);
+        extend = new ExtendSubsystem(hardwareMap, telemetry);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
         box = new BoxSubsystem(hardwareMap, boxState);
 

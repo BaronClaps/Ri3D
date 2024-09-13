@@ -54,8 +54,8 @@ public class Teleop {
 
     public Teleop(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, Pose startPose,  boolean fieldCentric, Gamepad gamepad1, Gamepad gamepad2) {
         claw = new ClawSubsystem(hardwareMap, clawState);
-        lift = new LiftSubsystem(hardwareMap);
-        extend = new ExtendSubsystem(hardwareMap);
+        lift = new LiftSubsystem(hardwareMap, telemetry);
+        extend = new ExtendSubsystem(hardwareMap, telemetry);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
         box = new BoxSubsystem(hardwareMap, boxState);
 

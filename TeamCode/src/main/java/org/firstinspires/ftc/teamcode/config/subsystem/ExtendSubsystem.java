@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 public class ExtendSubsystem {
+    private Telemetry telemetry;
 
     public DcMotor extend;
     private int pos;
@@ -18,9 +23,9 @@ public class ExtendSubsystem {
     public static double f = 0;
     private final double ticks_in_degrees = 537.7 / 360.0;
 
-    public ExtendSubsystem(HardwareMap hardwareMap) {
+    public ExtendSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         extend = hardwareMap.get(DcMotor.class, "extend");
         extend.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -54,7 +59,7 @@ public class ExtendSubsystem {
 
         double power = pid + ff;
 
-        lift.setPower(power);
+        extend.setPower(power);
         telemetry.addData("extend pos", pos);
         telemetry.addData("extend target", target);
     }
