@@ -9,20 +9,26 @@ import org.firstinspires.ftc.teamcode.config.pedroPathing.util.PIDFController;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 public class LiftSubsystem {
+    private Telemetry telemetry;
 
     public DcMotor lift;
     private int pos;
     public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toHighChamber, toHumanPlayer;
-    public PIDFController liftPIDF;
-    public static int targetPos;
-    public static double p = 0, i = 0, d = 0, f = 0;
-    private final double ticks_in_degrees = 700 / 180.0;
+    public PIDController liftPID;
+    public static int target;
+    public static double p = 0, i = 0, d = 0;
+    public static double f = 0;
+    private final double ticks_in_degrees = 537.7 / 180.0;
 
 
-    public LiftSubsystem(HardwareMap hardwareMap) {
+    public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         lift = hardwareMap.get(DcMotor.class, "lift");
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        liftPID = new PIDController(p, i, d);
 
         toZero = new RunAction(this::toZero);
         toLowBucket = new RunAction(this::toLowBucket);
@@ -35,17 +41,27 @@ public class LiftSubsystem {
     // Manual Control //
     public void manual(double n){ //(int liftPos, boolean negative) {
         lift.setPower(n);
-        /*if (!negative) {
-            lift.setPower(1);
-            this.liftPos = this.liftPos + liftPos;
-            lift.setTargetPosition(this.liftPos);
-        }
+    }
 
-        if (negative) {
-            lift.setPower(-1);
-            this.liftPos = lift.getCurrentPosition() - liftPos;
-            lift.setTargetPosition(this.liftPos);
-        }*/
+    public void setTarget(int b) {
+        target = b;
+    }
+
+    public void addToTarget(int b) {
+        target += b;
+    }
+
+    public void updatePIDF(){
+        liftPID.setPID(p,i,d);
+        updatePos();
+        double pid = liftPID.calculate(pos, target);
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees)) * f;
+
+        double power = pid + ff;
+
+        lift.setPower(power);
+        telemetry.addData("pos", pos);
+        telemetry.addData("target", target);
     }
 
     public void toZero() {
