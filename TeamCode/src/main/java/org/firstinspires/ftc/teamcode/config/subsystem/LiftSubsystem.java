@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.config.pedroPathing.util.PIDFController;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 public class LiftSubsystem {
@@ -12,6 +13,11 @@ public class LiftSubsystem {
     public DcMotor lift;
     private int pos;
     public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toHighChamber, toHumanPlayer;
+    public PIDFController liftPIDF;
+    public static int targetPos;
+    public static double p = 0, i = 0, d = 0, f = 0;
+    private final double ticks_in_degrees = 700 / 180.0;
+
 
     public LiftSubsystem(HardwareMap hardwareMap) {
         lift = hardwareMap.get(DcMotor.class, "lift");
@@ -40,15 +46,6 @@ public class LiftSubsystem {
             this.liftPos = lift.getCurrentPosition() - liftPos;
             lift.setTargetPosition(this.liftPos);
         }*/
-    }
-
-    public void manual(double n, int liftPos) {
-        lift.setPower(n);
-       updatePos();
-        lift.setTargetPosition(liftPos + pos);
-        if (lift.getCurrentPosition() > this.pos) {
-            lift.setPower(0);
-        }
     }
 
     public void toZero() {
