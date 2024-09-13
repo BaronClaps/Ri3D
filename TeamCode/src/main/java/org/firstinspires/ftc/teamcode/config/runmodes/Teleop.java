@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.config.runmodes;
 import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinInPwr;
 import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinOutPwr;
 
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.config.subsystem.BoxSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
@@ -69,8 +70,20 @@ public class Teleop {
         this.gamepad2 = gamepad2;
     }
 
+    public RunAction stopDrive = new RunAction(this::stopDrive);
+    public RunAction startDrive = new RunAction(this::startDrive);
+
+    private void startDrive() {
+         follower.startTeleopDrive();
+    }
+
+    private void stopDrive(){
+        follower.breakFollowing();
+    }
+
     public Action transfer() {
         return new SequentialAction(
+                stopDrive,
                 intake.spinStop,
                 new ParallelAction(
                         intake.pivotTransfer,
@@ -80,7 +93,8 @@ public class Teleop {
                 intake.spinOut,
                 new SleepAction(1),
                 intake.spinIn,
-                intake.spinStop
+                intake.spinStop,
+                startDrive
         );
     }
 

@@ -19,8 +19,8 @@ public class ExtendSubsystem {
 
     public PIDController extendPID;
     public static int target;
-    public static double p = 0, i = 0, d = 0;
-    public static double f = 0;
+    public static double p = 0.05, i = 0, d = 0.001;
+    public static double f = 0.01;
     private final double ticks_in_degrees = 537.7 / 360.0;
 
     public ExtendSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
