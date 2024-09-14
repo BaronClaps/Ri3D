@@ -121,14 +121,6 @@ public class Teleop {
 
         lift.manual(gamepad2.right_trigger - gamepad2.left_trigger);
 
-
-        /*if (gamepad2.left_trigger > 0.5)
-            lift.manual(-1);
-        else if (gamepad2.right_trigger > 0.5)
-            lift.manual(1);
-        else
-            lift.manual(0);*/
-
         if (gamepad2.left_bumper)
             extend.manual(-1);
         else if (gamepad2.right_bumper)

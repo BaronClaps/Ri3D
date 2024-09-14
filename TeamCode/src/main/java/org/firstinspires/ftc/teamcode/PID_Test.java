@@ -33,17 +33,10 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -73,8 +66,8 @@ import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Config
-@TeleOp(name="Drive", group="Linear OpMode")
-public class Drive extends OpMode {
+@TeleOp(name="PID_Test", group="z")
+public class PID_Test extends OpMode {
     private PIDController liftPID;
 
     private DcMotor lift;

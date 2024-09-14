@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.config.runmodes.Teleop;
 
 
-@TeleOp(name="BucketTeleop", group="Teleop")
+@TeleOp(name="Drive", group="A")
 public class Drive extends OpMode {
 
     private Teleop teleop;

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.config.util;
 
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Path;
 
 public class FieldConstants {
 
@@ -11,35 +13,28 @@ public class FieldConstants {
         RED_OBSERVATION
     }
 
-    public static final Pose blueBucketStart = new Pose(8.5, 84, 0);
-    public static final Pose blueObservationStart = new Pose(8.5, 36, 0);
-    public static final Pose redBucketStart = new Pose(144-8.5, 84, Math.toRadians(180));
-    public static final Pose redObservationStart = new Pose(144-8.5, 36, Math.toRadians(180));
+    public static final Pose blueBucketStartPose = new Pose(8, 79.5, Math.toRadians(180));
+    public static final Pose blueObservationStartPose = new Pose(8, 36, Math.toRadians(180));
+    public static final Pose redBucketStartPose = new Pose(144-8, 79.5, 0);
+    public static final Pose redObservationStartPose = new Pose(144-8, 36, 0);
+
+    // Blue Preload Poses
+    public static final Pose blueBucketPreloadPose = new Pose(37.75, 79.5, Math.toRadians(180));
+    public static final Pose blueObservationPreloadPose = new Pose(37.75, 36, Math.toRadians(180));
 
     // Blue Bucket Sample Poses
-    private static final Pose blueBucketLeftSample = new Pose(2.5+9.75+10.5, 4*24+1.5);
-    private static final Pose blueBucketMidSample = new Pose(2.5+9.75, 4*24+1.5);
-    private static final Pose blueBucketRightSample = new Pose(2.5, 4*24+1.5);
+    public static final Pose blueBucketLeftSamplePose = new Pose(40, 116, Math.toRadians(45));
+    public static final Pose blueBucketLeftSampleControlPose = new Pose(28, 108);
+    public static final Pose blueBucketMidSamplePose = new Pose(46, 126, Math.toRadians(90));
+    public static final Pose blueBucketMidSampleControlPose = new Pose(47.5, 110);
+    public static final Pose blueBucketRightSamplePose = new Pose(47.75, 130, Math.toRadians(90));
+    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
-    // Red Observation Sample Poses
-    private static final Pose blueObservationLeftSample = new Pose(144-2.5, 4*24+1.5);
-    private static final Pose blueObservationMidSample = new Pose(144-2.5-9.75, 4*24+1.5);
-    private static final Pose blueObservationRightSample = new Pose(144-2.5-9.75-10.5, 4*24+1.5);
+    public static final Pose blueBucketPose = new Pose(16, 128, Math.toRadians(-45));
+    public static final Pose blueObservationPose = new Pose(16, 16, Math.toRadians(-135));
 
-    // Red Observation Sample Poses
-    private static final Pose redObservationLeftSample = new Pose(144-2.5-9.75-10.5, 2*24-2.5);
-    private static final Pose redObservationMidSample = new Pose(144-2.5-9.75, 2*24-2.5);
-    private static final Pose redObservationRightSample = new Pose(144-2.5, 2*24-2.5);
-
-    // Red Bucket Sample Poses
-    private static final Pose redBucketLeftSample = new Pose(2.5, 2*24-2.5);
-    private static final Pose redBucketMidSample = new Pose(2.5+9.75, 2*24-2.5);
-    private static final Pose redBucketRightSample = new Pose(2.5+9.75+10.5, 2*24-2.5);
-
-
-    /*public static final Pose blueBucketPark = new Pose(12, 132, Math.toRadians(270));
-    public static final Pose blueObservationPark = new Pose(60, 132, Math.toRadians(270));
-    public static final Pose redBucketPark = new Pose(144-12, 132, Math.toRadians(270));
-    public static final Pose redObservationPark = new Pose(144-60, 132, Math.toRadians(270));*/
+    public static final Pose blueBucketParkPose = new Pose(65, 97.75, Math.toRadians(90));
+    public static final Pose blueBucketParkControlPose = new Pose(60.25, 123.5);
+    public static final Pose blueObservationParkPose = new Pose(16, 16, Math.toRadians(0));
 
 }

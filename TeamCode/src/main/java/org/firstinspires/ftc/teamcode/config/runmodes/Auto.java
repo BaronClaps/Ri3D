@@ -43,7 +43,7 @@ public class Auto {
     private boolean isBucket;
 
     public Path preload, element1, score1, element2, score2, element3, score3, park;
-    private Pose startPose, preloadPose, element1Pose, element2Pose, element3Pose, elementScorePose, parkPose;
+    private Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose;
 
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
@@ -83,22 +83,31 @@ public class Auto {
     public void createPoses() {
         switch (startLocation) {
             case BLUE_BUCKET:
-                startPose = blueBucketStart;
-                //parkPose = blueBucketPark;
+                startPose = blueBucketStartPose;
+                preloadPose = blueBucketPreloadPose;
+                element1ControlPose = blueBucketLeftSampleControlPose;
+                element1Pose = blueBucketLeftSamplePose;
+                element2ControlPose = blueBucketMidSampleControlPose;
+                element2Pose = blueBucketMidSamplePose;
+                element3ControlPose = blueBucketRightSampleControlPose;
+                element3Pose = blueBucketRightSamplePose;
+                elementScorePose = blueBucketPose;
+                parkControlPose = blueBucketParkControlPose;
+                parkPose = blueBucketParkPose;
                 break;
 
             case BLUE_OBSERVATION:
-                startPose = blueObservationStart;
+                startPose = blueObservationStartPose;
                 //parkPose = blueObservationPark;
                 break;
 
             case RED_BUCKET:
-                startPose = redBucketStart;
+                startPose = redBucketStartPose;
                 //parkPose = redBucketPark;
                 break;
 
             case RED_OBSERVATION:
-                startPose = redObservationStart;
+                startPose = redObservationStartPose;
                 //parkPose = redObservationPark;
                 break;
         }
@@ -111,45 +120,27 @@ public class Auto {
         preload = new Path(new BezierLine(new Point(startPose), new Point(preloadPose)));
         preload.setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading());
 
-        park = new Path(new BezierCurve(new Point(elementScorePose), new Point(elementScorePose.getX(), 108, Point.CARTESIAN), new Point(parkPose.getX(), 108, Point.CARTESIAN)));
+        element1 = new Path(new BezierCurve(new Point(preloadPose), new Point(element1ControlPose), new Point(element1Pose)));
+        element1.setLinearHeadingInterpolation(preloadPose.getHeading(), element1Pose.getHeading());
+
+        score1 = new Path(new BezierLine(new Point(element1Pose), new Point(elementScorePose)));
+        score1.setLinearHeadingInterpolation(element1Pose.getHeading(), elementScorePose.getHeading());
+
+        element2 = new Path(new BezierCurve(new Point(element1Pose), new Point(element2ControlPose), new Point(element2Pose)));
+        element2.setLinearHeadingInterpolation(element1Pose.getHeading(), element2Pose.getHeading());
+
+        score2 = new Path(new BezierLine(new Point(element2Pose), new Point(elementScorePose)));
+        score2.setLinearHeadingInterpolation(element2Pose.getHeading(), elementScorePose.getHeading());
+
+        element3 = new Path(new BezierCurve(new Point(element2Pose), new Point(element3ControlPose), new Point(element3Pose)));
+        element3.setLinearHeadingInterpolation(element2Pose.getHeading(), element3Pose.getHeading());
+
+        score3 = new Path(new BezierLine(new Point(element3Pose), new Point(elementScorePose)));
+        score3.setLinearHeadingInterpolation(element3Pose.getHeading(), elementScorePose.getHeading());
+
+        park = new Path(new BezierCurve(new Point(elementScorePose), new Point(parkControlPose), new Point(parkPose)));
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading());
-    }
 
 
-
-    public void followPath(Path path) {
-        follower.followPath(path);
-    }
-
-    public void followPath(Path path, boolean holdEnd) {
-        follower.followPath(path, holdEnd);
-    }
-
-    public void followPath(PathChain pathChain) {
-        follower.followPath(pathChain);
-    }
-
-    public void followPath(PathChain pathChain, boolean holdEnd) {
-        follower.followPath(pathChain, holdEnd);
-    }
-
-    public void holdPoint(BezierPoint point, double heading) {
-        follower.holdPoint(point, heading);
-    }
-
-    public boolean pathNotBusy() {
-        return !follower.isBusy();
-    }
-
-    public double getX() {
-        return follower.getPose().getX();
-    }
-
-    public double getY() {
-        return follower.getPose().getY();
-    }
-
-    public double getHeading() {
-        return follower.getPose().getHeading();
     }
 }
