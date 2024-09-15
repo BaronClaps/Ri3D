@@ -16,8 +16,8 @@ public class LiftSubsystem {
     private Telemetry telemetry;
 
     public DcMotor lift;
-    private int pos;
-    public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toHighChamber, toHumanPlayer;
+    private int pos, initalPos;
+    public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toHighChamber, toHighChamberRelease, toHumanPlayer;
     public PIDController liftPID;
     public static int target;
     public static double p = 0.04, i = 0, d = 0.000001;
@@ -39,6 +39,7 @@ public class LiftSubsystem {
         toHighBucket = new RunAction(this::toHighBucket);
         toLowChamber = new RunAction(this::toLowChamber);
         toHighChamber = new RunAction(this::toHighChamber);
+        toHighChamberRelease = new RunAction(this::toHighChamberRelease);
         toHumanPlayer = new RunAction(this::toHumanPlayer);
     }
 
@@ -69,63 +70,53 @@ public class LiftSubsystem {
     }
 
     public void toZero() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(10);
+        setTarget(0);
     }
 
     public void toLowBucket() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(3300);
+        setTarget(4300);
     }
 
     public void toHighBucket() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(3300);
+        setTarget(5000);
     }
 
     public void toLowChamber() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(3000);
+        setTarget(3000);
     }
 
     public void toHighChamber() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(4000);
+        setTarget(4300);
+    }
+
+    public void toHighChamberRelease() {
+        setTarget(4000);
     }
 
     public void toHumanPlayer() {
-        updatePos();
-        lift.setPower(1);
-        lift.setTargetPosition(2100);
+        setTarget(500);
     }
 
     // Util //
-
-    public void resetEncoder(){
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-    }
-
     public double getPos() {
+        updatePos();
         return pos;
     }
 
     public void updatePos() {
-        pos = lift.getCurrentPosition();
+        pos = lift.getCurrentPosition() - initalPos;
+    }
+
+    public boolean isAtTarget() {
+        return Math.abs(pos - target) < 10;
     }
 
     // Init + Start //
 
     public void init() {
-        resetEncoder();
+        initalPos = lift.getCurrentPosition();
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        pos = lift.getCurrentPosition();
     }
 
     public void start() {}

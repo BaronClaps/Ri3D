@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.config.pedroPathing.util.Timer;
 import org.firstinspires.ftc.teamcode.config.subsystem.BoxSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
@@ -20,21 +21,26 @@ import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierL
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.PathBuilder;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.config.util.action.Action;
 import org.firstinspires.ftc.teamcode.config.util.action.ActionStorage;
+import org.firstinspires.ftc.teamcode.config.util.action.ParallelAction;
+import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
+import org.firstinspires.ftc.teamcode.config.util.action.SequentialAction;
+import org.firstinspires.ftc.teamcode.config.util.action.SleepAction;
 
 public class Auto {
 
     private RobotStart startLocation;
 
-    private ClawSubsystem claw;
-    private ClawSubsystem.ClawState clawState;
-    private LiftSubsystem lift;
-    private ExtendSubsystem extend;
-    private IntakeSubsystem intake;
-    private IntakeSubsystem.IntakeSpinState intakeSpinState;
-    private IntakeSubsystem.IntakePivotState intakePivotState;
-    private BoxSubsystem box;
-    private BoxSubsystem.BoxState boxState;
+    public ClawSubsystem claw;
+    public ClawSubsystem.ClawState clawState;
+    public LiftSubsystem lift;
+    public ExtendSubsystem extend;
+    public IntakeSubsystem intake;
+    public IntakeSubsystem.IntakeSpinState intakeSpinState;
+    public IntakeSubsystem.IntakePivotState intakePivotState;
+    public BoxSubsystem box;
+    public BoxSubsystem.BoxState boxState;
 
     public Follower follower;
     public Telemetry telemetry;
@@ -42,6 +48,7 @@ public class Auto {
     private boolean isBlue;
     private boolean isBucket;
 
+    public RunAction transfer;
     public Path preload, element1, score1, element2, score2, element3, score3, park;
     private Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose;
 
@@ -59,6 +66,8 @@ public class Auto {
         this.isBucket = isBucket;
 
         startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
+
+        transfer = new RunAction(this::transfer);
     }
 
     public void init() {
@@ -78,6 +87,8 @@ public class Auto {
 
     public void update() {
         follower.update();
+        lift.updatePIDF();
+        extend.updatePIDF();
     }
 
     public void createPoses() {
@@ -91,7 +102,7 @@ public class Auto {
                 element2Pose = blueBucketMidSamplePose;
                 element3ControlPose = blueBucketRightSampleControlPose;
                 element3Pose = blueBucketRightSamplePose;
-                elementScorePose = blueBucketPose;
+                elementScorePose = blueBucketScorePose;
                 parkControlPose = blueBucketParkControlPose;
                 parkPose = blueBucketParkPose;
                 break;
@@ -140,7 +151,18 @@ public class Auto {
 
         park = new Path(new BezierCurve(new Point(elementScorePose), new Point(parkControlPose), new Point(parkPose)));
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading());
+    }
 
-
+    private Action transfer() {
+        return new SequentialAction(
+                intake.spinStop,
+                new ParallelAction(
+                        intake.pivotTransfer,
+                        box.toTransfer),
+                intake.spinOut,
+                new SleepAction(1),
+                intake.spinIn,
+                intake.spinStop
+        );
     }
 }

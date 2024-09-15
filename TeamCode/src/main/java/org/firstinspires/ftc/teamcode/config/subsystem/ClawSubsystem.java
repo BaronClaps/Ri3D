@@ -4,6 +4,8 @@ import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.*;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
+
 
 public class ClawSubsystem {
 
@@ -13,10 +15,14 @@ public class ClawSubsystem {
 
     private Servo claw;
     private ClawState state;
+    public RunAction openClaw, closeClaw;
 
     public ClawSubsystem(HardwareMap hardwareMap, ClawState clawState) {
         claw = hardwareMap.get(Servo.class, "claw");
         this.state = clawState;
+
+        openClaw = new RunAction(this::openClaw);
+        closeClaw = new RunAction(this::closeClaw);
     }
 
     public void setPos(double clawPos) {
@@ -39,6 +45,14 @@ public class ClawSubsystem {
         } else if (state == ClawState.OPEN) {
             setState(ClawState.CLOSED);
         }
+    }
+
+    public void openClaw() {
+        setState(ClawState.OPEN);
+    }
+
+    public void closeClaw() {
+        setState(ClawState.CLOSED);
     }
 
     public void init() {

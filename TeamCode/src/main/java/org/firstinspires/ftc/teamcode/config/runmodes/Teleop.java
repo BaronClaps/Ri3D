@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSp
 import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.intakeSpinOutPwr;
 
 import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.config.pedroPathing.util.Timer;
 import org.firstinspires.ftc.teamcode.config.subsystem.BoxSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.config.subsystem.ExtendSubsystem;
@@ -36,6 +37,7 @@ public class Teleop {
     private BoxSubsystem box;
     private BoxSubsystem.BoxState boxState;
 
+    public RunAction stopDrive, startDrive;
 
     private Follower follower;
     private Pose startPose;
@@ -68,34 +70,9 @@ public class Teleop {
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-    }
 
-    public RunAction stopDrive = new RunAction(this::stopDrive);
-    public RunAction startDrive = new RunAction(this::startDrive);
-
-    private void startDrive() {
-         follower.startTeleopDrive();
-    }
-
-    private void stopDrive(){
-        follower.breakFollowing();
-    }
-
-    public Action transfer() {
-        return new SequentialAction(
-                stopDrive,
-                intake.spinStop,
-                new ParallelAction(
-                        intake.pivotTransfer,
-                        //extend.toZero,
-                        //lift.toZero,
-                        box.toTransfer),
-                intake.spinOut,
-                new SleepAction(1),
-                intake.spinIn,
-                intake.spinStop,
-                startDrive
-        );
+        stopDrive = new RunAction(this::stopDrive);
+        startDrive = new RunAction(this::startDrive);
     }
 
     public void init() {
@@ -180,6 +157,29 @@ public class Teleop {
         follower.startTeleopDrive();
     }
 
+    private void startDrive() {
+        follower.startTeleopDrive();
+    }
 
+    private void stopDrive(){
+        follower.breakFollowing();
+    }
+
+    public Action transfer() {
+        return new SequentialAction(
+                //stopDrive,
+                intake.spinStop,
+                new ParallelAction(
+                        intake.pivotTransfer,
+                        //extend.toZero,
+                        //lift.toZero,
+                        box.toTransfer),
+                intake.spinOut,
+                new SleepAction(1),
+                intake.spinIn,
+                intake.spinStop//,
+                //startDrive
+        );
+    }
 
 }

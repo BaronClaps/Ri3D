@@ -14,7 +14,7 @@ public class ExtendSubsystem {
     private Telemetry telemetry;
 
     public DcMotor extend;
-    private int pos;
+    private int pos, initalPos;
     public RunAction toZero, toHalf, toFull;
 
     public PIDController extendPID;
@@ -39,7 +39,7 @@ public class ExtendSubsystem {
         toFull = new RunAction(this::toFull);
     }
 
-    public void manual(double n){ //(int extendPos, boolean negative) {
+    public void manual(double n) {
         extend.setPower(n);
     }
 
@@ -65,53 +65,36 @@ public class ExtendSubsystem {
     }
 
     public void toZero() {
-        updatePos();
-        extend.setTargetPosition(10);
-        extend.setPower(-1);
-
-        if (extend.getCurrentPosition() < this.pos) {
-            extend.setPower(0);
-        }
+        setTarget(0);
     }
 
     public void toHalf() {
-        updatePos();
-        extend.setTargetPosition(1000);
-        extend.setPower(1);
-
-        if (extend.getCurrentPosition() > this.pos) {
-            extend.setPower(0);
-        }
+        setTarget(1000);
     }
 
     public void toFull() {
-        updatePos();
-        extend.setTargetPosition(2000);
-        extend.setPower(1);
-
-        if (extend.getCurrentPosition() > this.pos) {
-            extend.setPower(0);
-        }
+        setTarget(2000);
     }
 
     // Util //
     public double getPos() {
+        updatePos();
         return pos;
     }
 
     public void updatePos() {
-        this.pos = extend.getCurrentPosition();
+        pos = extend.getCurrentPosition() - initalPos;
     }
 
-    public void resetEncoder(){
-        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public boolean isAtTarget() {
+        return Math.abs(pos - target) < 10;
     }
 
     // Init + Start //
     public void init() {
-        resetEncoder();
         extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        initalPos = extend.getCurrentPosition();
         pos = extend.getCurrentPosition();
     }
 
