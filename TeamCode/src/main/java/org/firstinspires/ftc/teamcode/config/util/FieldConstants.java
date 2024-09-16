@@ -19,7 +19,7 @@ public class FieldConstants {
     public static final Pose redObservationStartPose = new Pose(144-8, 36, 0);
 
     // Blue Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(37.75, 79.5, Math.toRadians(180));
+    public static final Pose blueBucketPreloadPose = new Pose(35.75, 79.5, Math.toRadians(180));
 
     // Blue Bucket Sample Poses
     public static final Pose blueBucketLeftSamplePose = new Pose(40, 116, Math.toRadians(45));

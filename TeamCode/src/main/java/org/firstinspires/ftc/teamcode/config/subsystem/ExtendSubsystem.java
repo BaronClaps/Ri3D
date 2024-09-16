@@ -90,14 +90,23 @@ public class ExtendSubsystem {
         return Math.abs(pos - target) < 10;
     }
 
+    public void resetEncoder() {
+        extend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     // Init + Start //
     public void init() {
+        resetEncoder();
         extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         initalPos = extend.getCurrentPosition();
         pos = extend.getCurrentPosition();
     }
 
-    public void start() {}
+    public void start() {
+        initalPos = extend.getCurrentPosition();
+        pos = extend.getCurrentPosition();
+    }
 
 }

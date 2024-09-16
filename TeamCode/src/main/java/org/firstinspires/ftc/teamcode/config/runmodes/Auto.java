@@ -68,12 +68,16 @@ public class Auto {
         startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
         createPoses();
         buildPaths();
+
         transfer = new RunAction(this::transfer);
     }
 
     public void init() {
-        //createPoses();
-        //buildPaths();
+        claw.init();
+        lift.init();
+        extend.init();
+        intake.init();
+        box.init();
     }
 
     public void init_loop() {}

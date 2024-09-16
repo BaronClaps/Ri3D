@@ -57,10 +57,12 @@ public class ClawSubsystem {
 
     public void init() {
         setState(ClawState.CLOSED);
+        closeClaw.runAction();
     }
 
     public void start() {
         setState(ClawState.CLOSED);
+        closeClaw.runAction();
     }
 
 
