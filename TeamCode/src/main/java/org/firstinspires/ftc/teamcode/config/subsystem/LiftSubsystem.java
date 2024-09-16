@@ -86,7 +86,7 @@ public class LiftSubsystem {
     }
 
     public void toHighChamber() {
-        setTarget(4300);
+        setTarget(3000);
     }
 
     public void toHighChamberRelease() {

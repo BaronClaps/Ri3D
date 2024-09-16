@@ -18,10 +18,10 @@ public class BlueBucket extends OpMode {
         auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
     }
 
-    @Override
-    public void init_loop() {
+    //@Override
+    /*public void init_loop() {
         auto.init_loop();
-    }
+    }*/
 
     @Override
     public void start() {
@@ -41,6 +41,7 @@ public class BlueBucket extends OpMode {
                 auto.lift.toHighChamber.runAction();
                 auto.follower.followPath(auto.preload);
                 setPathState(1);
+                setPathState(-1);
                 break;
             case 1:
                 if(!auto.follower.isBusy()) {
