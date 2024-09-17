@@ -64,13 +64,13 @@ public class Auto {
         createPoses();
         buildPaths();
 
-        transfer = new RunAction(this::transfer);
+        //transfer = new RunAction(this::transfer);
     }
 
     public void init() {
         claw.init();
-        lift.init();
-        extend.init();
+        //lift.init();
+        //extend.init();
         intake.init();
         box.init();
     }
@@ -80,15 +80,15 @@ public class Auto {
     public void start() {
         claw.start();
         lift.start();
-        extend.start();
-        intake.start();
+        //extend.start();
+        //intake.start();
         box.start();
     }
 
     public void update() {
         follower.update();
-        lift.updatePIDF();
-        extend.updatePIDF();
+        //lift.updatePIDF();
+        //extend.updatePIDF();
     }
 
     public void createPoses() {
@@ -153,7 +153,7 @@ public class Auto {
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading());
     }
 
-    private Action transfer() {
+    /*private Action transfer() {
         return new SequentialAction(
                 intake.spinStop,
                 new ParallelAction(
@@ -164,5 +164,5 @@ public class Auto {
                 intake.spinIn,
                 intake.spinStop
         );
-    }
+    }*/
 }

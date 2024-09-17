@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.config.subsystem;
 
+import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.*;
 import static java.lang.Math.abs;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.firstinspires.ftc.teamcode.config.pedroPathing.util.PIDFController;
+import org.firstinspires.ftc.teamcode.config.util.RobotConstants;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 public class LiftSubsystem {
@@ -17,7 +19,7 @@ public class LiftSubsystem {
 
     public DcMotor lift;
     private int pos, initalPos;
-    public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, toLowChamberRelease, toHighChamber, toHighChamberRelease, toHumanPlayer;
+    public RunAction toZero, toLowBucket, toHighBucket, toLowChamber, releaseLowChamber, toHighChamber, releaseHighChamber, toHumanPlayer;
     public PIDController liftPID;
     public static int target;
     public static double p = 0.04, i = 0, d = 0.000001;
@@ -71,7 +73,7 @@ public class LiftSubsystem {
     }
 
     public void toZero() {
-        setTarget(liftToZeroPos);
+        setTarget(liftZeroPos);
     }
 
     public void toLowBucket() {

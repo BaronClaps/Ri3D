@@ -30,9 +30,9 @@ public class BlueBucket extends OpMode {
         pathUpdate();
 
         telemetry.addData("state", pathState);
-        telemetry.addData("x", auto.follower.getPose.getX());
-        telemetry.addData("y", auto.follower.getPose.getY());
-        telemetry.addData("h", auto.follower.getPose.getHeading());
+        telemetry.addData("x", auto.follower.getPose().getX());
+        telemetry.addData("y", auto.follower.getPose().getY());
+        telemetry.addData("h", auto.follower.getPose().getHeading());
     }
 
     public void pathUpdate() {
@@ -47,7 +47,7 @@ public class BlueBucket extends OpMode {
                 if(!auto.follower.isBusy()) {
 
                     if (auto.lift.isAtTarget()) {
-                        Actions.runBlocking(auto.lift.toHighChamberRelease);
+                        Actions.runBlocking(auto.lift.releaseHighChamber);
                     }
 
                     if (auto.lift.isAtTarget()) {

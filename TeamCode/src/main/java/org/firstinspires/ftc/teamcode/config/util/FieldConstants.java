@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.config.util;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Path;
@@ -20,14 +22,14 @@ public class FieldConstants {
     public static final Pose redObservationStartPose = new Pose(144-8, 36, 0);
 
     // Blue Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(35.75, 79.5, Math.toRadians(180));
+    public static final Pose blueBucketPreloadPose = new Pose(34.5, 79.5, Math.toRadians(180));
 
     // Blue Bucket Sample Poses
-    public static final Pose blueBucketLeftSamplePose = new Pose(40, 116, Math.toRadians(45));
-    public static final Pose blueBucketLeftSampleControlPose = new Pose(28, 108);
-    public static final Pose blueBucketMidSamplePose = new Pose(46, 126, Math.toRadians(90));
+    public static final Pose blueBucketLeftSamplePose = new Pose(34.75, 113.5, Math.toRadians(66));
+    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
+    public static final Pose blueBucketMidSamplePose = new Pose(33, 125.5, Math.toRadians(73));
     public static final Pose blueBucketMidSampleControlPose = new Pose(47.5, 110);
-    public static final Pose blueBucketRightSamplePose = new Pose(47.75, 130, Math.toRadians(90));
+    public static final Pose blueBucketRightSamplePose = new Pose(33, 133, Math.toRadians(74));
     public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
     public static final Pose blueBucketScorePose = new Pose(16, 128, Math.toRadians(-45));
