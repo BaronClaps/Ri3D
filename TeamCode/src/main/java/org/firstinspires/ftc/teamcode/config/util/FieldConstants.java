@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.config.pedroPathing.pathGeneration.Path;
 
+@Config
 public class FieldConstants {
 
     public enum RobotStart {

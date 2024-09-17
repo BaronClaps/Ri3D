@@ -60,6 +60,7 @@ public class Auto {
         this.telemetry = telemetry;
 
         startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
+        
         createPoses();
         buildPaths();
 
