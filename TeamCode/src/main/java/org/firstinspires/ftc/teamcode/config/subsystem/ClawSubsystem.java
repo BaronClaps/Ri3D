@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.*;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.config.util.action.Actions;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 
@@ -56,13 +57,11 @@ public class ClawSubsystem {
     }
 
     public void init() {
-        setState(ClawState.CLOSED);
-        closeClaw.runAction();
+        Actions.runBlocking(closeClaw);
     }
 
     public void start() {
-        setState(ClawState.CLOSED);
-        closeClaw.runAction();
+        Actions.runBlocking(closeClaw);
     }
 
 

@@ -132,6 +132,7 @@ public class LiftSubsystem {
 
     public void start() {
         initalPos = lift.getCurrentPosition();
+        setTarget(10);
     }
 
 }

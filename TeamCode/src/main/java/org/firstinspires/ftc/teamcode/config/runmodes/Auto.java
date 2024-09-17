@@ -45,9 +45,6 @@ public class Auto {
     public Follower follower;
     public Telemetry telemetry;
 
-    private boolean isBlue;
-    private boolean isBucket;
-
     public RunAction transfer;
     public Path preload, element1, score1, element2, score2, element3, score3, park;
     private Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose;
@@ -61,9 +58,6 @@ public class Auto {
 
         this.follower = follower;
         this.telemetry = telemetry;
-
-        this.isBlue = isBlue;
-        this.isBucket = isBucket;
 
         startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
         createPoses();

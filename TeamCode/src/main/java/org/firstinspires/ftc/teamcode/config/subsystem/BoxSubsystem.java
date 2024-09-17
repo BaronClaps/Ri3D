@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.config.util.RobotConstants.boxTrans
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.config.util.action.Actions;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 
@@ -67,11 +68,11 @@ public class BoxSubsystem {
 
     // Init + Start //
     public void init() {
-        setState(BoxState.TRANSFER);
+        Actions.runBlocking(toTransfer);
     }
 
     public void start() {
-        setState(BoxState.TRANSFER);
+        Actions.runBlocking(toTransfer);
     }
 
 }

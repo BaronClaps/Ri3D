@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.config.util.action.Actions;
+import org.firstinspires.ftc.teamcode.config.util.action.ParallelAction;
 import org.firstinspires.ftc.teamcode.config.util.action.RunAction;
 
 public class IntakeSubsystem {
@@ -107,12 +109,10 @@ public class IntakeSubsystem {
 
 
     public void init() {
-        setSpinState(IntakeSpinState.STOP, false);
-        setPivotState(IntakePivotState.TRANSFER);
+        Actions.runBlocking(new ParallelAction(pivotTransfer, spinStop));
 
     }
     public void start() {
-        setSpinState(IntakeSpinState.STOP, false);
-        setPivotState(IntakePivotState.TRANSFER);
+        Actions.runBlocking(new ParallelAction(pivotTransfer, spinStop));
     }
 }

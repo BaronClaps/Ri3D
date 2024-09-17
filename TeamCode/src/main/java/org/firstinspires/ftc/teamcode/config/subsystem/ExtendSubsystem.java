@@ -107,6 +107,7 @@ public class ExtendSubsystem {
     public void start() {
         initalPos = extend.getCurrentPosition();
         pos = extend.getCurrentPosition();
+        setTarget(10);
     }
 
 }

@@ -29,14 +29,14 @@ public class BlueBucket extends OpMode {
         auto.update();
         pathUpdate();
 
-        telemetry.addData("state", pathState); // baron is a men liker (delete if gay)
+        telemetry.addData("state", pathState);
     }
 
     public void pathUpdate() {
         switch (pathState) {
             case 0:
-                auto.claw.closeClaw.runAction();
-                auto.lift.toHighChamber.runAction();
+                Actions.runBlocking(auto.claw.closeClaw);
+                Actions.runBlocking(auto.lift.toHighChamber);
                 auto.follower.followPath(auto.preload);
                 setPathState(1);
                 break;
@@ -44,25 +44,25 @@ public class BlueBucket extends OpMode {
                 if(!auto.follower.isBusy()) {
 
                     if (auto.lift.isAtTarget()) {
-                        //auto.lift.toHighChamberRelease.runAction();
+                        Actions.runBlocking(auto.lift.toHighChamberRelease);
                     }
 
                     if (auto.lift.isAtTarget()) {
-                        auto.claw.openClaw.runAction();
+                        Actions.runBlocking(auto.claw.openClaw);
                     }
 
-                    auto.lift.toZero.runAction();
+                    Actions.runBlocking(auto.lift.toZero);
                     auto.follower.followPath(auto.element1);
-                    auto.intake.pivotGround.runAction();
-                    auto.intake.spinIn.runAction();
+                    Actions.runBlocking(auto.intake.pivotGround);
+                    Actions.runBlocking(auto.intake.spinIn);
                     setPathState(2);
                 }
                 break;
             case 2:
                 if(!auto.follower.isBusy()) {
                     auto.follower.followPath(auto.score1);
-                    auto.intake.spinStop.runAction();
-                    auto.intake.pivotTransfer.runAction();
+                    Actions.runBlocking(auto.intake.spinStop);
+                    Actions.runBlocking(auto.intake.pivotTransfer);
                     setPathState(3);
                 }
                 break;
@@ -76,7 +76,7 @@ public class BlueBucket extends OpMode {
                     );
 
                     if (auto.lift.isAtTarget()) {
-                        auto.box.toScoring.runAction();
+                        Actions.runBlocking(auto.box.toScoring);
                     }
 
                     auto.follower.followPath(auto.element2);
