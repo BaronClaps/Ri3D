@@ -7,6 +7,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -35,6 +36,7 @@ public class VisionSubsystem {
     private WebcamName webcam1;
     private double x;
     private ClawSubsystem.ClawState clawState;
+    private Limelight3A limelight3A;
 
 
     public VisionSubsystem(HardwareMap hardwareMap, DcMotor leftFrontDrive, DcMotor rightFrontDrive, DcMotor leftBackDrive, DcMotor rightBackDrive, Telemetry telemetry) {
