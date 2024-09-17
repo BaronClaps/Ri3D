@@ -64,7 +64,7 @@ public class Auto {
         createPoses();
         buildPaths();
 
-        //transfer = new RunAction(this::transfer);
+        transfer = new RunAction(this::transfer);
     }
 
     public void init() {
@@ -153,7 +153,7 @@ public class Auto {
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading());
     }
 
-    /*private Action transfer() {
+    private Action transfer() {
         return new SequentialAction(
                 intake.spinStop,
                 new ParallelAction(
@@ -164,5 +164,5 @@ public class Auto {
                 intake.spinIn,
                 intake.spinStop
         );
-    }*/
+    }
 }
