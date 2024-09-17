@@ -30,6 +30,9 @@ public class BlueBucket extends OpMode {
         pathUpdate();
 
         telemetry.addData("state", pathState);
+        telemetry.addData("x", auto.follower.getPose.getX());
+        telemetry.addData("y", auto.follower.getPose.getY());
+        telemetry.addData("h", auto.follower.getPose.getHeading());
     }
 
     public void pathUpdate() {

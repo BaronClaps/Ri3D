@@ -38,9 +38,9 @@ public class LiftSubsystem {
         toLowBucket = new RunAction(this::toLowBucket);
         toHighBucket = new RunAction(this::toHighBucket);
         toLowChamber = new RunAction(this::toLowChamber);
-        toLowChamberRelease = new RunAction(this::toLowChamberRelease);
+        releaseLowChamber = new RunAction(this::releaseLowChamber);
         toHighChamber = new RunAction(this::toHighChamber);
-        toHighChamberRelease = new RunAction(this::toHighChamberRelease);
+        releaseHighChamber = new RunAction(this::releaseHighChamber);
         toHumanPlayer = new RunAction(this::toHumanPlayer);
     }
 
@@ -71,35 +71,35 @@ public class LiftSubsystem {
     }
 
     public void toZero() {
-        setTarget(0);
+        setTarget(liftToZeroPos);
     }
 
     public void toLowBucket() {
-        setTarget(2230);
+        setTarget(liftToLowBucketPos);
     }
 
     public void toHighBucket() {
-        setTarget(2230);
+        setTarget(liftToHighBucketPos);
     }
 
     public void toLowChamber() {
-        setTarget(1450);
+        setTarget(liftToLowChamberPos);
     }
 
-    public void toLowChamberRelease() {
-        setTarget(1000);
+    public void releaseLowChamber() {
+        setTarget(liftReleaseLowChamberPos);
     }
 
     public void toHighChamber() {
-        setTarget(2556);
+        setTarget(liftToHighChamberPos);
     }
 
-    public void toHighChamberRelease() {
-        setTarget(2276);
+    public void releaseHighChamber() {
+        setTarget(liftReleaseHighChamberPos);
     }
 
     public void toHumanPlayer() {
-        setTarget(750);
+        setTarget(liftToHumanPlayerPos);
     }
 
     // Util //
