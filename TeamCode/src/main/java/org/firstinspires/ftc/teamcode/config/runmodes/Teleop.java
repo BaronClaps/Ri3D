@@ -167,7 +167,7 @@ public class Teleop {
 
     public Action transfer() {
         return new SequentialAction(
-                //stopDrive,
+                stopDrive,
                 intake.spinStop,
                 new ParallelAction(
                         intake.pivotTransfer,
@@ -177,8 +177,8 @@ public class Teleop {
                 intake.spinOut,
                 new SleepAction(1),
                 intake.spinIn,
-                intake.spinStop//,
-                //startDrive
+                intake.spinStop,
+                startDrive
         );
     }
 
