@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.config.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.config.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.config.runmodes.Teleop;
-import org.firstinspires.ftc.teamcode.config.util.FieldConstants;
 
 
 @TeleOp(name="Drive", group="A")
