@@ -83,7 +83,7 @@ public class PID_Test extends OpMode {
     public void init() {
         liftPID = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        lift = hardwareMap.get(DcMotor.class, "extend");
+        lift = hardwareMap.get(DcMotor.class, "lift");
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 

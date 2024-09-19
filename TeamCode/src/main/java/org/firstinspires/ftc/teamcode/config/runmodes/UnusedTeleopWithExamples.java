@@ -63,7 +63,7 @@ public class UnusedTeleopWithExamples {
 
     public UnusedTeleopWithExamples(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, Pose startPose,  boolean fieldCentric, Gamepad gamepad1, Gamepad gamepad2) {
         //servoSubsystem = new ServoSubsystem(hardwareMap);
-        visionSubsystem = new VisionSubsystem(hardwareMap, leftFront, rightFront, leftRear, rightRear, telemetry);
+        visionSubsystem = new VisionSubsystem(hardwareMap, telemetry);
 
         this.follower = follower;
         this.startPose = startPose;

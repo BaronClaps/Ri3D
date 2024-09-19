@@ -31,6 +31,7 @@ public class LiftSubsystem {
         this.telemetry = telemetry;
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         lift = hardwareMap.get(DcMotor.class, "lift");
+        lift.setDirection(DcMotor.Direction.REVERSE);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
