@@ -10,8 +10,8 @@ public class RobotConstants {
     public static double intakeSpinOutPwr = -0.25;
     public static double intakeSpinStopPwr = 0;
     public static double intakePivotTransferPos= 0.965;
-    public static double intakePivotGroundPos = 0.57;
-    public static double boxTransferPos= 0.9;
+    public static double intakePivotGroundPos = 0.4;
+    public static double boxTransferPos= 0.95;
     public static double boxScoringPos = 0.5;
     public static int liftZeroPos = 0;
     public static int liftToHumanPlayerPos = 750;
